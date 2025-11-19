@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 18, 2025 at 05:02 PM
+-- Generation Time: Nov 19, 2025 at 05:06 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -182,15 +182,15 @@ INSERT INTO `user` (`user_id`, `nama`, `email`, `password`, `role`, `created_at`
 --
 ALTER TABLE `camp`
   ADD PRIMARY KEY (`camp_id`),
-  ADD KEY `fk_paket_for_camp` (`paket_id`);
+  ADD KEY `fk_camp_paket` (`paket_id`);
 
 --
 -- Indexes for table `detail_pemesanan`
 --
 ALTER TABLE `detail_pemesanan`
   ADD PRIMARY KEY (`detail_id`),
-  ADD KEY `detail_for_booking` (`pemesanan_id`),
-  ADD KEY `camp_for_booking` (`camp_id`);
+  ADD KEY `fk_detail_pemesanan_master` (`pemesanan_id`),
+  ADD KEY `fk_detail_camp` (`camp_id`);
 
 --
 -- Indexes for table `paket`
@@ -203,14 +203,14 @@ ALTER TABLE `paket`
 --
 ALTER TABLE `pembayaran`
   ADD PRIMARY KEY (`pembayaran_id`),
-  ADD KEY `booking_for_payment` (`pemesanan_id`);
+  ADD KEY `fk_pembayaran_pemesanan` (`pemesanan_id`);
 
 --
 -- Indexes for table `pemesanan_master`
 --
 ALTER TABLE `pemesanan_master`
   ADD PRIMARY KEY (`pemesanan_id`),
-  ADD KEY `user_for_booking` (`user_id`);
+  ADD KEY `fk_pemesanan_user` (`user_id`);
 
 --
 -- Indexes for table `user`
@@ -267,26 +267,26 @@ ALTER TABLE `user`
 -- Constraints for table `camp`
 --
 ALTER TABLE `camp`
-  ADD CONSTRAINT `fk_paket_for_camp` FOREIGN KEY (`paket_id`) REFERENCES `camp` (`camp_id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_camp_paket` FOREIGN KEY (`paket_id`) REFERENCES `paket` (`paket_id`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `detail_pemesanan`
 --
 ALTER TABLE `detail_pemesanan`
-  ADD CONSTRAINT `camp_for_booking` FOREIGN KEY (`camp_id`) REFERENCES `detail_pemesanan` (`detail_id`),
-  ADD CONSTRAINT `detail_for_booking` FOREIGN KEY (`pemesanan_id`) REFERENCES `detail_pemesanan` (`detail_id`);
+  ADD CONSTRAINT `fk_detail_camp` FOREIGN KEY (`camp_id`) REFERENCES `camp` (`camp_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_detail_pemesanan_master` FOREIGN KEY (`pemesanan_id`) REFERENCES `pemesanan_master` (`pemesanan_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `pembayaran`
 --
 ALTER TABLE `pembayaran`
-  ADD CONSTRAINT `booking_for_payment` FOREIGN KEY (`pemesanan_id`) REFERENCES `pembayaran` (`pembayaran_id`);
+  ADD CONSTRAINT `fk_pembayaran_pemesanan` FOREIGN KEY (`pemesanan_id`) REFERENCES `pemesanan_master` (`pemesanan_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `pemesanan_master`
 --
 ALTER TABLE `pemesanan_master`
-  ADD CONSTRAINT `user_for_booking` FOREIGN KEY (`user_id`) REFERENCES `pemesanan_master` (`pemesanan_id`);
+  ADD CONSTRAINT `fk_pemesanan_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
