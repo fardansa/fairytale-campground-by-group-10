@@ -11,7 +11,7 @@ class AdminController extends Controller
     public function bookings()
     {
         $this->authorize('admin-action');
-        $bookings = PemesananMaster::with('user','detail.camp.paket')->orderBy('created_at','desc')->get();
+        $bookings = PemesananMaster::with('user','detail.tent.paket')->orderBy('created_at','desc')->get();
         return response()->json($bookings);
     }
 
@@ -19,7 +19,7 @@ class AdminController extends Controller
     public function bookingDetail($id)
     {
         $this->authorize('admin-action');
-        $booking = PemesananMaster::with('user','detail.camp.paket')->find($id);
+        $booking = PemesananMaster::with('user','detail.tent.paket')->find($id);
         if (!$booking) return response()->json(['message' => 'Pemesanan tidak ditemukan'], 404);
         return response()->json($booking);
     }

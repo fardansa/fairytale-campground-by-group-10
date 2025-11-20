@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PemesananMaster;
 use App\Models\DetailPemesanan;
-use App\Models\Camp;
+use App\Models\Tent;
 use App\Models\Paket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,8 +21,8 @@ class PemesananController extends Controller
             'tanggal_checkout' => 'required|date|after:tanggal_checkin',
             'items' => 'required|array|min:1',
             'items.*.paket_id' => 'required|exists:paket,paket_id',
-            'items.*.camp_list' => 'required|array|min:1',
-            'items.*.camp_list.*' => 'required|integer|exists:camp,camp_id'
+            'items.*.tent_list' => 'required|array|min:1',
+            'items.*.tent_list.*' => 'required|integer|exists:tent,tent_id'
         ]);
 
         $checkin = Carbon::parse($data['tanggal_checkin'])->toDateString();
@@ -37,10 +37,10 @@ class PemesananController extends Controller
         $flatten = [];
         foreach ($data['items'] as $group) {
             $paketId = $group['paket_id'];
-            foreach ($group['camp_list'] as $campId) {
+            foreach ($group['tent_list'] as $campId) {
                 $flatten[] = [
                     'paket_id' => $paketId,
-                    'camp_id' => $campId
+                    'tent_id' => $tentId
                 ];
             }
         }
@@ -48,8 +48,8 @@ class PemesananController extends Controller
         // Check availability for each camp in the flatten array
         $conflict = [];
         foreach ($flatten as $row) {
-            $campId = $row['camp_id'];
-            $overlap = DetailPemesanan::where('camp_id', $campId)
+            $tentId = $row['camp_id'];
+            $overlap = DetailPemesanan::where('tent_id', $tentId)
                 ->whereHas('pemesanan', function($q) use ($checkin, $checkout) {
                     $q->where('tanggal_checkin', '<', $checkout)
                       ->where('tanggal_checkout', '>', $checkin)
@@ -57,7 +57,7 @@ class PemesananController extends Controller
                 })->exists();
 
             if ($overlap) {
-                $conflict[] = $campId;
+                $conflict[] = $tentId;
             }
         }
 
@@ -86,12 +86,12 @@ class PemesananController extends Controller
                 $paket = Paket::find($group['paket_id']);
                 $paketPrice = $paket->harga;
 
-                foreach ($group['camp_list'] as $campId) {
+                foreach ($group['tent_list'] as $campId) {
                     // check camp exists
-                    $camp = Camp::find($campId);
-                    if (!$camp) {
+                    $tent = Tent::find($campId);
+                    if (!$tent) {
                         DB::rollBack();
-                        return response()->json(['message' => "Camp id {$campId} tidak ditemukan"], 404);
+                        return response()->json(['message' => "Tent id {$tentId} tidak ditemukan"], 404);
                     }
 
                     $harga_per_malam = $paketPrice;
@@ -99,7 +99,7 @@ class PemesananController extends Controller
 
                     DetailPemesanan::create([
                         'pemesanan_id' => $master->pemesanan_id,
-                        'camp_id' => $campId,
+                        'tent_id' => $tentId,
                         'harga_per_malam' => $harga_per_malam,
                         'subtotal' => $subtotal
                     ]);
@@ -118,11 +118,11 @@ class PemesananController extends Controller
             foreach ($data['items'] as $group) {
                 $paket = Paket::find($group['paket_id']);
                 $items = [];
-                foreach ($group['camp_list'] as $campId) {
+                foreach ($group['tent_list'] as $tentId) {
                     $dp = DetailPemesanan::where('pemesanan_id', $master->pemesanan_id)
-                        ->where('camp_id', $campId)->first();
+                        ->where('tent_id', $tentId)->first();
                     $items[] = [
-                        'camp_id' => $campId,
+                        'tent_id' => $tentId,
                         'harga_per_malam' => $dp->harga_per_malam,
                         'subtotal' => $dp->subtotal
                     ];
@@ -130,7 +130,7 @@ class PemesananController extends Controller
                 $detailResponse[] = [
                     'paket_id' => $group['paket_id'],
                     'paket_nama' => $paket->nama_paket,
-                    'camp_list' => $items
+                    'tent_list' => $items
                 ];
             }
 
@@ -159,7 +159,7 @@ class PemesananController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $bookings = PemesananMaster::with('detail.camp.paket')->where('user_id', $user->user_id)->orderBy('created_at', 'desc')->get();
+        $bookings = PemesananMaster::with('detail.tent.paket')->where('user_id', $user->user_id)->orderBy('created_at', 'desc')->get();
         return response()->json($bookings);
     }
 
@@ -167,7 +167,7 @@ class PemesananController extends Controller
     public function show(Request $request, $id)
     {
         $user = $request->user();
-        $booking = PemesananMaster::with('detail.camp.paket')->where('pemesanan_id', $id)->first();
+        $booking = PemesananMaster::with('detail.tent.paket')->where('pemesanan_id', $id)->first();
         if (!$booking) return response()->json(['message' => 'Pemesanan tidak ditemukan'], 404);
         if ($booking->user_id !== $user->user_id && $request->user()->role !== 'admin') {
             return response()->json(['message' => 'Akses dilarang'], 403);

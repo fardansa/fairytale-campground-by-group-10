@@ -12,7 +12,7 @@ class DetailPemesanan extends Model
 
     protected $fillable = [
         'pemesanan_id',
-        'camp_id',
+        'tent_id',
         'harga_per_malam',
         'subtotal'
     ];
@@ -24,6 +24,6 @@ class DetailPemesanan extends Model
 
     public function camp()
     {
-        return $this->belongsTo(Camp::class, 'camp_id');
+        return $this->belongsTo(Camp::class, 'tent_id');
     }
 }

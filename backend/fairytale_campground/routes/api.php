@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PaketController;
-use App\Http\Controllers\CampController;
+use App\Http\Controllers\TentController;
 use App\Http\Controllers\PemesananController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\AdminController;
@@ -36,9 +36,9 @@ Route::middleware('auth:sanctum')->group(function() {
 Route::get('/paket', [PaketController::class, 'index']);
 Route::get('/paket/{id}', [PaketController::class, 'show']);
 
-Route::get('/camp', [CampController::class, 'index']);
-Route::get('/camp/{id}', [CampController::class, 'show']);
-Route::get('/camp/available', [CampController::class, 'checkAvailability']);
+Route::get('/tent', [TentController::class, 'index']);
+Route::get('/tent/{id}', [TentController::class, 'show']);
+Route::get('/tent/available', [TentController::class, 'checkAvailability']);
 
 // ADMIN ONLY
 Route::middleware(['auth:sanctum','admin'])->group(function() {
@@ -46,9 +46,9 @@ Route::middleware(['auth:sanctum','admin'])->group(function() {
     Route::put('/paket/{id}', [PaketController::class, 'update']);
     Route::delete('/paket/{id}', [PaketController::class, 'destroy']);
 
-    Route::post('/camp', [CampController::class, 'store']);
-    Route::put('/camp/{id}', [CampController::class, 'update']);
-    Route::delete('/camp/{id}', [CampController::class, 'destroy']);
+    Route::post('/tent', [TentController::class, 'store']);
+    Route::put('/tent/{id}', [TentController::class, 'update']);
+    Route::delete('/tent/{id}', [TentController::class, 'destroy']);
 
     Route::get('/admin/bookings', [AdminController::class, 'bookings']);
     Route::get('/admin/bookings/{id}', [AdminController::class, 'bookingDetail']);

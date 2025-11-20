@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Camp;
+use App\Models\Tent;
 use App\Models\DetailPemesanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class CampController extends Controller
+class TentController extends Controller
 {
     // list all camps (optionally filter by paket_id)
     public function index(Request $request)
     {
-        $q = Camp::query();
+        $q = Tent::query();
 
         if ($request->has('paket_id')) {
             $q->where('paket_id', $request->paket_id);
@@ -23,9 +23,9 @@ class CampController extends Controller
 
     public function show($id)
     {
-        $camp = Camp::with('paket')->find($id);
-        if (!$camp) return response()->json(['message' => 'Camp tidak ditemukan'], 404);
-        return response()->json($camp);
+        $tent = Tent::with('paket')->find($id);
+        if (!$tent) return response()->json(['message' => 'Tent tidak ditemukan'], 404);
+        return response()->json($tent);
     }
 
     // check availability for a date range and paket
@@ -38,17 +38,17 @@ class CampController extends Controller
         ]);
 
         // get camp ids that are already booked for the range (exclude expired/cancel statuses)
-        $bookedCampIds = DetailPemesanan::whereHas('pemesanan', function($q) use ($data) {
+        $bookedTentIds = DetailPemesanan::whereHas('pemesanan', function($q) use ($data) {
             $q->where('tanggal_checkin', '<', $data['tanggal_checkout'])
               ->where('tanggal_checkout', '>', $data['tanggal_checkin'])
               ->whereNotIn('status_pemesanan', ['expired', 'dibatalkan']);
-        })->pluck('camp_id')->toArray();
+        })->pluck('tent_id')->toArray();
 
-        $q = Camp::query();
+        $q = Tent::query();
         if (!empty($data['paket_id'])) {
             $q->where('paket_id', $data['paket_id']);
         }
-        $available = $q->whereNotIn('camp_id', $bookedCampIds)->get();
+        $available = $q->whereNotIn('tent_id', $bookedTentIds)->get();
 
         return response()->json([
             'checkin' => $data['tanggal_checkin'],
@@ -65,14 +65,14 @@ class CampController extends Controller
 
         $data = $request->validate([
             'paket_id' => 'required|exists:paket,paket_id',
-            'nomor_camp' => 'required|string|max:10',
+            'nomor_tent' => 'required|string|max:10',
             'nomor_loker' => 'nullable|string|max:10',
             'status' => 'nullable|in:tersedia,tidak tersedia'
         ]);
 
-        $camp = Camp::create($data);
+        $tent = Tent::create($data);
 
-        return response()->json(['message' => 'Camp dibuat', 'camp' => $camp], 201);
+        return response()->json(['message' => 'Tent dibuat', 'tent' => $tent], 201);
     }
 
     // admin update
@@ -80,18 +80,18 @@ class CampController extends Controller
     {
         $this->authorize('admin-action');
 
-        $camp = Camp::find($id);
-        if (!$camp) return response()->json(['message' => 'Camp tidak ditemukan'], 404);
+        $tent = Tent::find($id);
+        if (!$tent) return response()->json(['message' => 'Tent tidak ditemukan'], 404);
 
         $data = $request->validate([
             'paket_id' => 'nullable|exists:paket,paket_id',
-            'nomor_camp' => 'nullable|string|max:10',
+            'nomor_tent' => 'nullable|string|max:10',
             'nomor_loker' => 'nullable|string|max:10',
             'status' => 'nullable|in:tersedia,tidak tersedia'
         ]);
 
-        $camp->update($data);
-        return response()->json(['message' => 'Camp diperbarui', 'camp' => $camp]);
+        $tent->update($data);
+        return response()->json(['message' => 'Tent diperbarui', 'camp' => $tent]);
     }
 
     // admin delete
@@ -99,20 +99,20 @@ class CampController extends Controller
     {
         $this->authorize('admin-action');
 
-        $camp = Camp::find($id);
-        if (!$camp) return response()->json(['message' => 'Camp tidak ditemukan'], 404);
+        $tent = Tent::find($id);
+        if (!$tent) return response()->json(['message' => 'Tent tidak ditemukan'], 404);
 
         // Optional: Prevent delete if there are future bookings
-        $hasFuture = $camp->detailPemesanan()->whereHas('pemesanan', function($q) {
+        $hasFuture = $tent->detailPemesanan()->whereHas('pemesanan', function($q) {
             $q->where('tanggal_checkout', '>=', now()->toDateString())
               ->whereNotIn('status_pemesanan', ['expired', 'dibatalkan']);
         })->exists();
 
         if ($hasFuture) {
-            return response()->json(['message' => 'Tidak bisa menghapus camp yang memiliki booking aktif/future'], 400);
+            return response()->json(['message' => 'Tidak bisa menghapus tent yang memiliki booking aktif/future'], 400);
         }
 
-        $camp->delete();
-        return response()->json(['message' => 'Camp dihapus']);
+        $tent->delete();
+        return response()->json(['message' => 'Tent dihapus']);
     }
 }
