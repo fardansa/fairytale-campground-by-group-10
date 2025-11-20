@@ -71,9 +71,16 @@ class AuthController extends Controller
 
     // profile
     public function profile(Request $request)
-    {
-        return response()->json($request->user());
+{
+    $user = $request->user();
+
+    if (!$user) {
+        return response()->json(['message' => 'User tidak ditemukan'], 404);
     }
+
+    return response()->json($user);
+    }
+
 
     // update profile
     public function update(Request $request)
