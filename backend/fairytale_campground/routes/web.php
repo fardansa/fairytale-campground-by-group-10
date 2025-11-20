@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use routes\api;
 
 Route::get('/', function () {
     return view('welcome');
