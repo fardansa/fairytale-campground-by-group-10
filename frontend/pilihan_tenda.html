@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fairytale Campground</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Fairytale Campground</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+        <link rel="stylesheet" href="./styles.css">
+    </head>
+
+    <body>
+
+        <header class="warna-navbar">
+            <div class="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                    <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                        <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                            <use xlink:href="#bootstrap"></use>
+                        </svg>
+                    </a>
+                    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                        <li>
+                            <a class="nav-link px-2" href="./index.html">Home</a>
+                        </li>
+                        <li>
+                            <a class="nav-link px-2" href="./booking.html">Booking</a>
+                        </li>
+                        <li>
+                            <a class="nav-link px-2" href="./contact_us.html">Contact Us</a>
+                        </li>
+                    </ul>
+
+                    <div class="text-end">
+                        <a href="./registrasi.html" class="btn btn-outline-light me-2">Registrasi</a>
+                        <a href="./login.html" class="btn btn-light me-2">Login</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+    <div class="d-flex justify-content-center align-items-center flex-column"
+        style="min-height: 80vh; padding-top: 20px;">
+
+        <div class="text-center mb-4">
+            <h2>Pilih Tenda Anda</h2>
+            <p class="text-muted">Silakan pilih nomor tenda yang tersedia.</p>
+        </div>
+
+        <div style="width: 100%; max-width: 450px;" class="d-flex flex-column align-items-center px-3">
+
+            <div class="card w-100 mb-3 shadow-sm">
+                <div class="card-body">
+                    <label class="form-label fw-bold">Single Tent</label>
+                    <div class="input-group">
+                        <select class="form-select" id="select1">
+                            <option selected disabled value="">Pilih Nomor Tenda</option>
+                            <option value="Single Tent - 01">Single Tent - 01</option>
+                            <option value="Single Tent - 03">Single Tent - 03</option>
+                            <option value="Single Tent - 10">Single Tent - 10</option>
+                        </select>
+                        <button class="btn btn-success" onclick="addItem('select1','list1', 'single')">Add</button>
+                    </div>
+                    <ul class="mt-2 list-group list-group-flush" id="list1"></ul>
+                </div>
+            </div>
+
+            <div class="card w-100 mb-3 shadow-sm">
+                <div class="card-body">
+                    <label class="form-label fw-bold">Double Tent</label>
+                    <div class="input-group">
+                        <select class="form-select" id="select2">
+                            <option selected disabled value="">Pilih Nomor Tenda</option>
+                            <option value="Double Tent - 03">Double Tent - 03</option>
+                            <option value="Double Tent - 04">Double Tent - 04</option>
+                            <option value="Double Tent - 05">Double Tent - 05</option>
+                        </select>
+                        <button class="btn btn-success" onclick="addItem('select2','list2', 'double')">Add</button>
+                    </div>
+                    <ul class="mt-2 list-group list-group-flush" id="list2"></ul>
+                </div>
+            </div>
+
+            <div class="card w-100 mb-3 shadow-sm">
+                <div class="card-body">
+                    <label class="form-label fw-bold">Family Tent</label>
+                    <div class="input-group">
+                        <select class="form-select" id="select3">
+                            <option selected disabled value="">Pilih Nomor Tenda</option>
+                            <option value="Family Tent - 02">Family Tent - 02</option>
+                            <option value="Family Tent - 09">Family Tent - 09</option>
+                            <option value="Family Tent - 10">Family Tent - 10</option>
+                        </select>
+                        <button class="btn btn-success" onclick="addItem('select3','list3', 'family')">Add</button>
+                    </div>
+                    <ul class="mt-2 list-group list-group-flush" id="list3"></ul>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 w-100 mt-3 mb-5">
+                <a class="btn btn-warning keranjang-btn py-2 fw-bold" href="./hasil.html" role="button">
+                    Lihat Keranjang & Lanjut
+                </a>
+                <button class="btn btn-outline-danger btn-sm" onclick="resetSelection()">Reset Pilihan</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Kunci penyimpanan di LocalStorage
+        const STORAGE_KEY = "tendaDipilih";
+
+        // Setup LocalStorage awal jika belum ada
+        if (!localStorage.getItem(STORAGE_KEY)) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ single: [], double: [], family: [] }));
+        }
+
+        // Load tampilan list saat halaman dibuka (agar data tidak hilang saat refresh)
+        window.onload = function () {
+            const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            renderInitialList(stored.single, 'list1');
+            renderInitialList(stored.double, 'list2');
+            renderInitialList(stored.family, 'list3');
+        };
+
+        // Fungsi bantu render list saat load
+        function renderInitialList(items, listId) {
+            const list = document.getElementById(listId);
+            list.innerHTML = ""; // Bersihkan dulu
+            items.forEach(val => {
+                createListItem(val, list);
+            });
+        }
+
+        // Fungsi untuk membuat elemen LI
+        function createListItem(text, parentList) {
+            const li = document.createElement('li');
+            li.className = "list-group-item d-flex justify-content-between align-items-center";
+            li.innerText = text;
+
+            // Opsional: Tambahkan ikon kecil atau styling
+            const badge = document.createElement("span");
+            badge.className = "badge bg-success rounded-pill";
+            badge.innerText = "✓";
+            li.appendChild(badge);
+
+            parentList.appendChild(li);
+        }
+
+        // Fungsi Menambah Item
+        function addItem(selectId, listId, category) {
+            const select = document.getElementById(selectId);
+            const list = document.getElementById(listId);
+            const value = select.value;
+
+            // Cek validasi sederhana: pastikan user memilih sesuatu dan bukan default
+            if (value && value !== "") {
+
+                // Cek apakah item sudah ada di list (mencegah duplikasi)
+                const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+                if (stored[category].includes(value)) {
+                    alert("Tenda ini sudah Anda pilih!");
+                    return;
+                }
+
+                // Tambahkan ke UI
+                createListItem(value, list);
+
+                // Simpan data ke localStorage
+                stored[category].push(value);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+            } else {
+                alert("Silakan pilih nomor tenda terlebih dahulu.");
+            }
+        }
+
+        // Fungsi Reset (Opsional, untuk memudahkan testing)
+        function resetSelection() {
+            if (confirm("Apakah Anda yakin ingin menghapus semua pilihan?")) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({ single: [], double: [], family: [] }));
+                location.reload(); // Refresh halaman
+            }
+        }
+    </script>
+</body>
+
+</html>
