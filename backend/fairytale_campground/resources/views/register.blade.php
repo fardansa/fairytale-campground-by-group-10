@@ -45,13 +45,30 @@
             })
         });
 
-        const data = await res.json();
+        let data;
+        try {
+            data = await res.clone().json();
+        } catch (e) {
+            // fallback: bukan JSON, kemungkinan HTML error
+            console.error("Server tidak mengirim JSON:", await res.text());
+            alert("Terjadi kesalahan server.");
+            return;
+        }
 
-        if (data.message === "Registrasi berhasil") {
+        if (res.ok) {
             window.location.href = "/register_success";
         } else {
-            alert(data.message, "Registrasi gagal!");
+            alert(data.message || "Registrasi gagal!");
         }
-    });
+    }); 
+
+    //     const data = await res.json();
+
+    //     if (data.message === "Registrasi berhasil") {
+    //         window.location.href = "/register_success";
+    //     } else {
+    //         alert(data.message, "Registrasi gagal!");
+    //     }
+    // });
     </script>
 @endsection

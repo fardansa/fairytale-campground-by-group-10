@@ -68,13 +68,13 @@
         </a>
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
             <li>
-            <a class="nav-link px-2" href="./index/home">Home</a>
+            <a class="nav-link px-2" href="./">Home</a>
             </li>
             <li>
-            <a class="nav-link px-2" href="./index/booking">Booking</a>
+            <a class="nav-link px-2" href="./booking">Booking</a>
             </li>
             <li>
-            <a class="nav-link px-2" href="./index/contact_us">Contact Us</a>
+            <a class="nav-link px-2" href="./contact_us">Contact Us</a>
             </li>
         </ul>
 

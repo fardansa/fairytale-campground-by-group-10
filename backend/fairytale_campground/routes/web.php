@@ -22,6 +22,14 @@ Route::get('/register_success', function () {
     return view('register_success');
 });
 
+Route::get('/contact_us', function () {
+    return view('contact_us');
+}); 
+
+Route::get('/booking', function () {
+    return view('booking');
+});
+
 Route::get('/api/test', function () {
     return "API via WEB OK";
 });
