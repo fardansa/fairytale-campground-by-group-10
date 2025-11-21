@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fairytale Campground</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <link rel="stylesheet" href="./styles.css">
+
+    <style>
+  .hero-full {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: url('./foto/img hero.jpg') center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.7));
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    padding: 0 20px;
+  }
+
+  .hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    text-shadow: 0 3px 10px rgba(0,0,0,0.5);
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    margin-bottom: 28px;
+    color: #e5e5e5;
+  }
+
+  .btn-hero {
+    padding: 14px 32px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    background-color: #1d4807;
+    border: none;
+    color: white;
+    transition: 0.25s ease;
+  }
+
+  .btn-hero:hover {
+    background-color: #2e6b0c;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 576px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+    .hero-subtitle {
+      font-size: 1rem;
+    }
+  }
+  </style>
+</head>
+  
+<body>
+  <header class="navbar-custom">
+          <div class="navbar-container">
+
+              <!-- Logo -->
+              <a href="./index.html" class="navbar-logo">Fairytale Campground</a>
+
+              <!-- Menu Navigasi -->
+              <nav>
+              <ul class="navbar-menu">
+                  <li><a href="./index.html">Home</a></li>
+                  <li><a href="./pickdate.html">Booking</a></li>
+                  <li><a href="./contact_us.html">Contact Us</a></li>
+              </ul>
+              </nav>
+
+              <!-- Button Auth -->
+              <div class="navbar-auth">
+              <a href="./registrasi.html" class="btn-outline">Registrasi</a>
+              <a href="./login.html" class="btn-solid">Login</a>
+              </div>
+          </div>
+      </header>
+
+  <section class="hero-full">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">Fairytale Campground</h1>
+    <p class="hero-subtitle">
+      Rasakan pengalaman camping yang hangat dan tak terlupakan.
+    </p>
+    <a href="./pickdate.html">
+      <button class="btn-hero">Booking Now</button>
+    </a>
+  </div>
+</section>
+  
+
+    <script>
+      const raw = location.pathname.split("/").pop();
+      const currentPath = raw === "" ? "index.html" : raw;
+      document.querySelectorAll(".nav-link").forEach(link => {
+        const href = link.getAttribute("href").split("/").pop().replace(/^\.\/+/, "");
+        if (href === currentPath) {
+          link.classList.add("active");
+        } else {
+          link.classList.remove("active");
+        }
+      });
+
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+
+</html>

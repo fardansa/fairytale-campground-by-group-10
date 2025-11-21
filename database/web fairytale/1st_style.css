@@ -1,0 +1,121 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #cce6b0;
+}
+
+.topnav {
+    background-color: #1d4807;
+    text-align: center;
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+}
+
+
+.cover-container {
+    width: 100%;
+    position: relative;
+}
+
+.cover {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+}
+
+.logo-overlay {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 110px;
+}
+
+.branding {
+    background-color: #cce6b0;
+    height: 60vh;
+}
+
+.branding h1 {
+    font-family: Cambria;
+    font-size: 80px;
+    color: rgb(3, 9, 0);
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.branding h2 {
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 100;
+    font-size: 48px;
+    color: rgb(9, 27, 0);
+}
+
+
+.brief_desc {
+    overflow: hidden;
+    padding: 20px;
+    position: relative;
+    background-color: rgb(0, 23, 0);
+}
+
+.brief_desc div {
+    float: left;
+    width: 55%;
+    margin-top: 100px;
+}
+
+.brief_desc p {
+    line-height: 1.6;
+    font-family: 'Papyrus';
+    font-size: 25px;
+    color: white;
+    text-align: center;
+}
+
+.brief_desc img {
+    float: right;
+    width: 400px;
+    height: auto;
+    margin-left: 20px;
+}
+
+
+.biometric {
+    margin: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+    background-color: #cce6b0;
+    text-align: center;
+    font-size: 50px;
+    font-family: Cambria;
+}
+
+
+.shape-locker {
+    --r: 20px;
+
+    font-size: 23px;
+    color: rgb(255, 255, 255);
+    height: 250px;
+    aspect-ratio: 1.5;
+    padding: var(--r);
+    background: #1d4807;
+    font-family: Verdana;
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    margin: 30px;
+    border-radius: 20px;
+
+    mask:
+        radial-gradient(50% 50%, #0000 66%, #000 67%) round var(--r) var(--r)/calc(2*var(--r)) calc(2*var(--r)),
+        conic-gradient(#000 0 0) content-box;
+}
