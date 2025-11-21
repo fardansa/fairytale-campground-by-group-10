@@ -15,7 +15,8 @@ class AuthController extends Controller
         $data = $request->validate([
             'nama' => 'required|string|max:100',
             'email' => 'required|email|unique:user,email',
-            'password' => 'required|string|min:6|confirmed' // expect password_confirmation
+            'password' => 'required|string|min:6|confirmed', // expect password_confirmation
+            'password_confirmation' => 'required'
         ]);
 
         $data['password'] = Hash::make($data['password']);
