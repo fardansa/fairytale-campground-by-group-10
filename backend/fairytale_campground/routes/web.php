@@ -30,6 +30,18 @@ Route::get('/booking', function () {
     return view('booking');
 });
 
+Route::get('/booking/single', function () {
+    return view('popup1');
+});
+
+Route::get('/booking/double', function () {
+    return view('popup2');
+});
+
+Route::get('/booking/family', function () {
+    return view('popup3');
+});
+
 Route::get('/api/test', function () {
     return "API via WEB OK";
 });
