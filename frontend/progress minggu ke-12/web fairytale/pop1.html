@@ -26,35 +26,28 @@
 
 <body>
 
-    <header class="warna-navbar">
-        <div class="container">
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                    <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
-                        <use xlink:href="#bootstrap"></use>
-                    </svg>
-                </a>
-                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li>
-                        <a class="nav-link px-2" href="./index.html">Home</a>
-                    </li>
-                    <li>
-                        <a class="nav-link px-2" href="./booking.html">Booking</a>
-                    </li>
-                    <li>
-                        <a class="nav-link px-2" href="./contact_us.html">Contact Us</a>
-                    </li>
-                </ul>
+<header class="navbar-custom">
+          <div class="navbar-container">
+              <a href="./index.html" class="navbar-logo">Fairytale Campground</a>
 
-                <div class="text-end">
-                    <a href="./registrasi.html" class="btn btn-outline-light me-2">Registrasi</a>
-                    <a href="./login.html" class="btn btn-light me-2">Login</a>
-                </div>
-            </div>
-        </div>
-    </header>
+              <nav>
+              <ul class="navbar-menu">
+                  <li><a href="./index.html">Home</a></li>
+                  <li><a href="./pickdate.html">Booking</a></li>
+                  <li><a href="./contact_us.html">Contact Us</a></li>
+              </ul>
+              </nav>
 
-    <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+              <div class="navbar-auth">
+              <a href="./registrasi.html" class="btn-outline">Registrasi</a>
+              <a href="./login.html" class="btn-solid">Login</a>
+              </div>
+          </div>
+      </header>
+
+<a href="javascript:history.back()" class="btn-back">← Kembali</a>
+
+    <div class="container d-flex justify-content-center align-items-center" style="height: 60vh;">
         <div class="row justify-content-center gy-4">
 
             <div class="col-md-4 d-flex justify-content-center">
@@ -99,26 +92,26 @@
         </div>
     </div>
 
-    <!-- modal yang kek pop up -->
+<!-- modal yang kek pop up-->
 <div class="modal fade" id="myModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h1 class="modal-title">Double Tent</h1>
+                <h1 class="modal-title">Single Tent</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body">
-                <p>Tenda medium dengan ruang lebih luas, cocok untuk pasangan, sahabat, atau dua orang yang ingin camping dengan lebih
-                lega. Area tendanya berada dekat jalur utama dan fasilitas umum.</p>
+                <p>Tenda ukuran kecil yang dirancang untuk solo traveler atau tamu yang ingin menikmati ketenangan pribadi. Lokasinya
+                ditempatkan di area yang lebih private dan dekat dengan titik sunrise/sunset.</p>
                 <h2>Fasilitas</h2>
                 <ul>
-                    <li>2 sleeping pad atau 1 matras double</li>
-                    <li>2 sleeping bag</li>
+                    <li>1 sleeping pad atau matras single</li>
+                    <li>1 sleeping bag</li>
                     <li>Lampu tenda LED</li>
-                    <li>Meja & kursi camping</li>
-                    <li>Area api unggun bersama</li>
+                    <li>Meja kecil lipat</li>
+                    <li>Akses area api unggun umum</li>
                     <li>Free refill air minum</li>
                     <li>Charging station di area bersama</li>
                     <li>Toilet & kamar mandi umum</li>
@@ -126,33 +119,33 @@
 
                 <h2>Kapasitas</h2>
                 <ul>
-                    <li>2 orang</li>
+                <li>1 Orang</li>
                 </ul>
 
                 <h2>Harga</h2>
                 <ul>
-                    <li>Rp<i>250.000/malam</i></li>
+                    <li>Rp<i>150.000/malam</i></li>
                 </ul>
             </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <a href="./pilihan_tenda.html" class="btn btn-success">Book</a>
-                </div>
-
             </div>
+
         </div>
     </div>
+</div>
 
-    <!-- bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<!-- bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const myModal = new bootstrap.Modal(document.getElementById('myModal'));
-            myModal.show();
-        });
-    </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const myModal = new bootstrap.Modal(document.getElementById('myModal'));
+        myModal.show();
+    });
+</script>
 
 <script>
     const raw = location.pathname.split("/").pop();

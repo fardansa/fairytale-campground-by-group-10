@@ -1,6 +1,86 @@
-.warna-navbar {
-    background-color: #243b15 !important; 
-}
+/* NAVBAR */
+        .navbar-custom {
+        width: 100%;
+        background-color: #1d4807;
+        color: white;
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding: 14px 0;
+        z-index: 999;
+        box-shadow: 0px 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .navbar-container {
+        max-width: 1280px;
+        margin: auto;
+        padding: 0 24px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        }
+
+        .navbar-logo {
+        font-size: 26px;
+        font-weight: 700;
+        color: white;
+        text-decoration: none;
+        }
+
+        .navbar-menu {
+        list-style: none;
+        display: flex;
+        gap: 32px;
+        margin: 0;
+        padding: 0;
+        }
+
+        .navbar-menu a {
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 500;
+        transition: 0.2s;
+        }
+
+        .navbar-menu a:hover {
+        color: #bbf7d0;
+        }
+
+        .navbar-auth {
+        display: flex;
+        gap: 16px;
+        }
+
+        .btn-outline {
+        padding: 8px 16px;
+        border: 2px solid white;
+        border-radius: 10px;
+        color: white;
+        text-decoration: none;
+        transition: 0.2s;
+        }
+
+        .btn-outline:hover {
+        background-color: white;
+        color: #1d4807;
+        }
+
+        .btn-solid {
+        padding: 8px 16px;
+        background-color: white;
+        color: #1d4807;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 10px;
+        transition: 0.2s;
+        }
+
+        .btn-solid:hover {
+        background-color: #bbf7d0;
+        }
+
 
 .form-signin {
   max-width: 330px;
@@ -219,4 +299,25 @@ body {
 .text-success {
   color: #1f4d1a !important;
 }
+
+.btn-back {
+    display: inline-block;
+    margin-top: 110px; /* kasih jarak dari navbar */
+    margin-left: 20px;
+    font-size: 17px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #0a472e; /* warna tema hijau */
+    background-color: #d4f5dd;
+    padding: 8px 18px;
+    border-radius: 8px;
+    transition: 0.2s ease-in-out;
+    border: 2px solid #0a472e;
+}
+
+.btn-back:hover {
+    background-color: #0a472e;
+    color: #ffffff;
+}
+
 
