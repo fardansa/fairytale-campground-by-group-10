@@ -13,84 +13,101 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet">
 
-    <style>
-    html, body {
-      height: 100%;
-      overflow: hidden;
-    }
-
-    header {
-      z-index: 10;
-    }
-
-    .hero-section {
-      height: 50vh; 
+  <style>
+    .hero-full {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background: url('./img/img hero.jpg') center/cover no-repeat;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      background-color: #f8f9fa;
       text-align: center;
+      color: #fff;
     }
 
-    .hero-section h1 {
-      margin-bottom: 0.5rem;
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.7));
     }
 
-    .hero-section p {
-      margin: 0;
-      color: #6c757d;
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      padding: 0 20px;
     }
 
-    .image-section {
-      height: 100vh; 
-      overflow: hidden;
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      text-shadow: 0 3px 10px rgba(0,0,0,0.5);
     }
 
-    .image-section img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+    .hero-subtitle {
+      font-size: 1.2rem;
+      margin-top: 10px;
+      margin-bottom: 28px;
+      color: #e5e5e5;
     }
 
+    .btn-hero {
+      padding: 14px 32px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      background-color: #1d4807;
+      border: none;
+      color: white;
+      transition: 0.25s ease;
+    }
+
+    .btn-hero:hover {
+      background-color: #2e6b0c;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 576px) {
+      .hero-title {
+        font-size: 2rem;
+      }
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
   
 <body>  
-    <header class="warna-navbar">
-    <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-            <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
-            <use xlink:href="#bootstrap"></use>
-            </svg>
-        </a>
-        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-            <li>
-            <a class="nav-link px-2" href="./">Home</a>
-            </li>
-            <li>
-            <a class="nav-link px-2" href="./booking">Booking</a>
-            </li>
-            <li>
-            <a class="nav-link px-2" href="./contact_us">Contact Us</a>
-            </li>
-        </ul>
+    <header class="navbar-custom">
+        <div class="navbar-container">
 
-        <div class="text-end">
-            <a href="./register" class="btn btn-outline-light me-2">Registrasi</a>
-            <a href="./login" class="btn btn-light me-2">Login</a>
+              <!-- Logo -->
+            <a href="./index.html" class="navbar-logo">Fairytale Campground</a>
+
+            <!-- Menu Navigasi -->
+            <nav>
+               <ul class="navbar-menu">
+                  <li><a href="/index">Home</a></li>
+                  <li><a href="/booking">Booking</a></li>
+                  <li><a href="/contact_us">Contact Us</a></li>
+                </ul>
+            </nav>
+
+              <!-- Button Auth -->
+            <div class="navbar-auth">
+              <a href="/register" class="btn-outline">Registrasi</a>
+              <a href="/login" class="btn-solid">Login</a>
+            </div>
         </div>
-        </div>
-    </div>
     </header>
 
     @yield('content')
 
     <script>
         const raw = location.pathname.split("/").pop();
-        const currentPath = raw === "" ? "index.html" : raw;
+        const currentPath = raw === "" ? "index" : raw;
 
         document.querySelectorAll(".nav-link").forEach(link => {
             const href = link.getAttribute("href");

@@ -5,13 +5,17 @@
 @endsection
 
 @section('content')
-    <section class="hero-section">
-      <h1 class="display-4 fw-bold">Fairytale Campground</h1>
-      <p class="fw-normal">Rasakan pengalaman camping yang hangat dan tak terlupakan.</p>
-    </section>
-  
-  
-    <section class="image-section">
-      <img src="{{ url('/img/Untitled design (30).png') }}" alt="Campground Image">
-    </section>
+<section class="hero-full">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">Fairytale Campground</h1>
+    <p class="hero-subtitle">
+      Rasakan pengalaman camping yang hangat dan tak terlupakan.
+    </p>
+    <a href="/pickdate">
+      <button class="btn-hero">Booking Now</button>
+    </a>
+  </div>
+</section>  
+
 @endsection

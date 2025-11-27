@@ -27,7 +27,7 @@ Route::get('/contact_us', function () {
 }); 
 
 Route::get('/booking', function () {
-    return view('booking');
+    return view('pickdate');
 });
 
 Route::get('/booking/single', function () {
