@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Riwayat Pesanan — Fairytale Campground</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f6fbf6;
+            padding-top: 72px;
+        }
+
+        .card-order {
+            border: 2px solid #1d4807;
+        }
+
+        .small-muted {
+            color: #6c757d;
+            font-size: .9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-dark bg-success fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="./index.html">Fairytale Campground</a>
+            <a class="btn btn-light btn-sm" href="./pickdate.html">Booking lagi</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h3 class="mb-4">Riwayat Pesanan Anda</h3>
+
+        <div id="ordersWrap" class="mb-5">
+            <div class="text-muted">Memuat riwayat...</div>
+        </div>
+
+        <div class="mb-5">
+            <h6>Catatan</h6>
+            <ul>
+                <li>Halaman ini secara periodik mem-poll data order dari "backend" (di demo: localStorage).</li>
+                <li>Jika ada cron job server yang mengubah status (Paid / Cancelled), halaman ini akan menampilkan
+                    status terbaru saat polling.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // baca bookings dari localStorage (simulasi)
+        function getBookings() { return JSON.parse(localStorage.getItem("bookings") || "[]"); }
+
+        function renderOrders() {
+            const wrap = document.getElementById("ordersWrap");
+            const bookings = getBookings().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            if (!bookings || bookings.length === 0) {
+                wrap.innerHTML = `<div class="alert alert-info">Belum ada pesanan. Silakan lakukan <a href="./pickdate.html">Booking</a>.</div>`;
+                return;
+            }
+
+            wrap.innerHTML = bookings.map(b => {
+                const statusBadge = b.status === "Paid" ? `<span class="badge bg-success">Paid</span>`
+                    : b.status === "Pending" ? `<span class="badge bg-warning text-dark">Pending</span>`
+                        : `<span class="badge bg-danger">Cancelled</span>`;
+
+                const itemsHTML = (b.items || []).map(it => `<div><strong>${it.tentType}</strong> • Tenda #${it.tentNumber || "-"}</div>`).join("");
+
+                const expireNote = b.status === "Pending" && b.expiresAt ? `<div class="small-muted">Expire: ${new Date(b.expiresAt).toLocaleString()}</div>` : "";
+
+                return `
+      <div class="card card-order mb-3 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <div class="h6 mb-1">Order ID: <code>${b.id}</code></div>
+              ${itemsHTML}
+              <div class="small-muted mt-2">Check-in: ${b.checkIn} • Check-out: ${b.checkOut} • ${b.nights} malam</div>
+              ${expireNote}
+            </div>
+            <div class="text-end">
+              <div class="mb-2">${statusBadge}</div>
+              <div class="small-muted">Total: Rp ${Number(b.total || 0).toLocaleString('id-ID')}</div>
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <details>
+              <summary class="small-muted">Detail & Bukti</summary>
+              <div class="mt-2 small">
+                Dibuat: ${new Date(b.createdAt).toLocaleString()}<br>
+                ${b.paidAt ? "Dibayar: " + new Date(b.paidAt).toLocaleString() : ""}
+              </div>
+              ${b.paymentProof ? `<div class="mt-2"><img src="${b.paymentProof}" style="max-width:300px;border-radius:6px;border:1px solid #ddd"></div>` : ""}
+            </details>
+          </div>
+        </div>
+      </div>
+      `;
+            }).join("");
+        }
+
+        // Polling: ambil update setiap 3s
+        renderOrders();
+        setInterval(renderOrders, 3000);
+
+        // Simulasi cron server-side (jika belum ada backend).
+        // NOTE: ini hanya demo; di production logika ini harus server-side cron.
+        setInterval(() => {
+            const now = new Date();
+            const bookings = getBookings();
+            let changed = false;
+            bookings.forEach(b => {
+                if (b.status === "Pending" && b.expiresAt && new Date(b.expiresAt) <= now) {
+                    b.status = "Cancelled"; changed = true;
+                }
+            });
+            if (changed) localStorage.setItem("bookings", JSON.stringify(bookings));
+        }, 10000); // cek tiap 10s (demo)
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
