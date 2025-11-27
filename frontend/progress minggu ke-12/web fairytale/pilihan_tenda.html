@@ -118,82 +118,130 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        // Kunci penyimpanan di LocalStorage
-        const STORAGE_KEY = "tendaDipilih";
+<script>
+    // Utility: read dates (compat)
+    function readDatesFromStorage() {
+        const checkIn = JSON.parse(localStorage.getItem("checkIn") || localStorage.getItem("checkin_date") || "null");
+        const checkOut = JSON.parse(localStorage.getItem("checkOut") || localStorage.getItem("checkout_date") || "null");
+        return { checkIn, checkOut };
+    }
 
-        // Setup LocalStorage awal jika belum ada
-        if (!localStorage.getItem(STORAGE_KEY)) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({ single: [], double: [], family: [] }));
-        }
+    // Reuse the same availability-check logic as pickdate (or call backend directly)
+    async function fetchAvailabilityFromBackend(checkIn, checkOut) {
+        // TODO: replace with real fetch to API
+        // return fetch(`/api/availability?checkIn=${checkIn}&checkOut=${checkOut}`).then(r=>r.json());
 
-        // Load tampilan list saat halaman dibuka (agar data tidak hilang saat refresh)
-        window.onload = function () {
-            const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
-            renderInitialList(stored.single, 'list1');
-            renderInitialList(stored.double, 'list2');
-            renderInitialList(stored.family, 'list3');
+        // simulation: mark some specific tent numbers unavailable for demo
+        await new Promise(r => setTimeout(r, 200));
+        // Example sim: if checkIn day is odd -> Single tent 03 unavailable, if even -> Family 09 unavailable
+        const d = new Date(checkIn);
+        const odd = !!(d.getDate() % 2);
+        return {
+            available: true,
+            details: {
+                Single: { // map of option values -> available boolean
+                    "Single Tent - 01": true,
+                    "Single Tent - 03": !odd,
+                    "Single Tent - 10": true
+                },
+                Double: {
+                    "Double Tent - 03": true,
+                    "Double Tent - 04": true,
+                    "Double Tent - 05": true
+                },
+                Family: {
+                    "Family Tent - 02": true,
+                    "Family Tent - 09": odd, // sometimes unavailable
+                    "Family Tent - 10": true
+                }
+            }
         };
+    }
 
-        // Fungsi bantu render list saat load
-        function renderInitialList(items, listId) {
-            const list = document.getElementById(listId);
-            list.innerHTML = ""; // Bersihkan dulu
-            items.forEach(val => {
-                createListItem(val, list);
-            });
+    async function applyAvailabilityToOptions() {
+        const { checkIn, checkOut } = readDatesFromStorage();
+        // if dates missing, show a warning and disable proceed button
+        if (!checkIn || !checkOut) {
+            document.querySelector(".keranjang-btn").classList.add("disabled");
+            document.querySelector(".keranjang-btn").setAttribute("title", "Pilih tanggal dulu di halaman Booking");
+            return;
         }
 
-        // Fungsi untuk membuat elemen LI
-        function createListItem(text, parentList) {
+        const resp = await fetchAvailabilityFromBackend(checkIn, checkOut);
+        // iterate details and disable options accordingly
+        if (resp && resp.details) {
+            Object.keys(resp.details).forEach(cat => {
+                const map = resp.details[cat]; // e.g. { "Single Tent - 01": true, ... }
+                Object.keys(map).forEach(optVal => {
+                    // find option element with value optVal
+                    const option = document.querySelector(`option[value="${optVal}"]`);
+                    if (option) {
+                        option.disabled = !map[optVal];
+                        if (!map[optVal]) option.textContent = option.textContent + " (Tidak tersedia)";
+                    }
+                });
+            });
+
+            // If all options for all categories are disabled, disable proceed button
+            const anyEnabled = Array.from(document.querySelectorAll("select.form-select option"))
+                .some(o => !o.disabled && o.value !== "");
+            const proceedBtn = document.querySelector(".keranjang-btn");
+            if (!anyEnabled) {
+                proceedBtn.classList.add("disabled");
+                proceedBtn.setAttribute("title", "Tidak ada tenda tersedia pada tanggal terpilih");
+            } else {
+                proceedBtn.classList.remove("disabled");
+                proceedBtn.removeAttribute("title");
+            }
+        }
+    }
+
+    // run on load
+    window.addEventListener("DOMContentLoaded", function () {
+        applyAvailabilityToOptions();
+    });
+
+    // also call when user changes selects (to prevent adding disabled option)
+    function addItem(selectId, listId, category) {
+        const select = document.getElementById(selectId);
+        const list = document.getElementById(listId);
+        const value = select.value;
+        if (value && value !== "" && !select.options[select.selectedIndex].disabled) {
+            // retrieve stored
+            const STORAGE_KEY = "tendaDipilih";
+            const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"single":[],"double":[],"family":[]}');
+            // category map
+            const catKey = category;
+            if (stored[category].includes(value)) {
+                alert("Tenda ini sudah Anda pilih!");
+                return;
+            }
+            // add UI
             const li = document.createElement('li');
             li.className = "list-group-item d-flex justify-content-between align-items-center";
-            li.innerText = text;
-
-            // Opsional: Tambahkan ikon kecil atau styling
+            li.innerText = value;
             const badge = document.createElement("span");
             badge.className = "badge bg-success rounded-pill";
             badge.innerText = "✓";
             li.appendChild(badge);
-
-            parentList.appendChild(li);
+            list.appendChild(li);
+            // persist
+            stored[category].push(value);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+        } else {
+            alert("Silakan pilih nomor tenda yang tersedia terlebih dahulu.");
         }
+    }
 
-        // Fungsi Menambah Item
-        function addItem(selectId, listId, category) {
-            const select = document.getElementById(selectId);
-            const list = document.getElementById(listId);
-            const value = select.value;
-
-            // Cek validasi sederhana: pastikan user memilih sesuatu dan bukan default
-            if (value && value !== "") {
-
-                // Cek apakah item sudah ada di list (mencegah duplikasi)
-                const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
-                if (stored[category].includes(value)) {
-                    alert("Tenda ini sudah Anda pilih!");
-                    return;
-                }
-
-                // Tambahkan ke UI
-                createListItem(value, list);
-
-                // Simpan data ke localStorage
-                stored[category].push(value);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
-            } else {
-                alert("Silakan pilih nomor tenda terlebih dahulu.");
-            }
+    // resetSelection kept same as before
+    function resetSelection() {
+        if (confirm("Apakah Anda yakin ingin menghapus semua pilihan?")) {
+            localStorage.setItem("tendaDipilih", JSON.stringify({ single: [], double: [], family: [] }));
+            location.reload(); // Refresh halaman
         }
+    }
+</script>
 
-        // Fungsi Reset (Opsional, untuk memudahkan testing)
-        function resetSelection() {
-            if (confirm("Apakah Anda yakin ingin menghapus semua pilihan?")) {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify({ single: [], double: [], family: [] }));
-                location.reload(); // Refresh halaman
-            }
-        }
-    </script>
 </body>
 
 </html>

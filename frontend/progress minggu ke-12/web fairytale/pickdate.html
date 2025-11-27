@@ -227,17 +227,50 @@
 </div>
 
 <script>
+    // --- helper for availability check ---
+    async function fetchAvailabilityFromBackend(checkIn, checkOut) {
+        // contoh fetch ke endpoint nyata:
+        // return fetch(`/api/availability?checkIn=${checkIn}&checkOut=${checkOut}`)
+        //   .then(r => r.json());
+
+        // FALLBACK SIMULASI (jika backend tidak tersedia)
+        // Struktur return:
+        // { available: true/false, details: { "Single": true, "Double": true, "Family": false } }
+        await new Promise(r => setTimeout(r, 300)); // simulasi latency
+        // contoh simulasi: Family tidak tersedia jika checkout di akhir bulan (random demo)
+        const unavailableFamily = new Date(checkOut).getDate() % 2 === 0; // random rule demo
+        return {
+            available: !unavailableFamily,
+            details: {
+                Single: true,
+                Double: true,
+                Family: !unavailableFamily
+            }
+        };
+    }
+
+    // fungsi umum yang dipakai di submit dan di halaman pilihan_tenda (re-usable)
+    async function checkAvailability(checkIn, checkOut) {
+        try {
+            const resp = await fetchAvailabilityFromBackend(checkIn, checkOut);
+            return resp; // object
+        } catch (err) {
+            console.warn("Availability check failed, fallback to assume available", err);
+            return { available: true, details: { Single: true, Double: true, Family: true } };
+        }
+    }
+
+    // FLATPICKR init (sama seperti milikmu)
     const checkIn = flatpickr("#checkin", {
         minDate: "today",
         dateFormat: "Y-m-d",
-        onChange: function(selectedDates) {
+        onChange: function (selectedDates) {
             if (selectedDates.length > 0) {
                 const chosenDate = selectedDates[0].toISOString().split('T')[0];
-                localStorage.setItem("checkin_date", chosenDate);
-
+                localStorage.setItem("checkin_date", JSON.stringify(chosenDate));
+                localStorage.setItem("checkIn", JSON.stringify(chosenDate));
                 const minCheckout = new Date(selectedDates[0]);
                 minCheckout.setDate(minCheckout.getDate() + 1);
-                
                 checkOut.set("minDate", minCheckout);
                 checkOut.setDate("");
             }
@@ -246,17 +279,18 @@
 
     const checkOut = flatpickr("#checkout", {
         dateFormat: "Y-m-d",
-        onChange: function(selectedDates) {
+        onChange: function (selectedDates) {
             if (selectedDates.length > 0) {
                 const chosenDate = selectedDates[0].toISOString().split('T')[0];
-                localStorage.setItem("checkout_date", chosenDate);
+                localStorage.setItem("checkout_date", JSON.stringify(chosenDate));
+                localStorage.setItem("checkOut", JSON.stringify(chosenDate));
             }
         }
     });
 
     window.addEventListener("DOMContentLoaded", () => {
-        const savedCheckin = localStorage.getItem("checkin_date");
-        const savedCheckout = localStorage.getItem("checkout_date");
+        const savedCheckin = JSON.parse(localStorage.getItem("checkIn") || localStorage.getItem("checkin_date") || "null");
+        const savedCheckout = JSON.parse(localStorage.getItem("checkOut") || localStorage.getItem("checkout_date") || "null");
 
         if (savedCheckin) {
             checkIn.setDate(savedCheckin);
@@ -273,12 +307,11 @@
     function showPopup() {
         document.getElementById("popupWarning").classList.remove("hidden");
     }
-
     function closePopup() {
         document.getElementById("popupWarning").classList.add("hidden");
     }
 
-    document.getElementById("dateForm").addEventListener("submit", function (e) {
+    document.getElementById("dateForm").addEventListener("submit", async function (e) {
         e.preventDefault();
 
         const checkinValue = checkIn.input.value;
@@ -289,12 +322,25 @@
             return;
         }
 
-        localStorage.setItem("checkin_date", checkinValue);
-        localStorage.setItem("checkout_date", checkoutValue);
+        // simpan ke localStorage (compatible)
+        localStorage.setItem("checkIn", JSON.stringify(checkinValue));
+        localStorage.setItem("checkOut", JSON.stringify(checkoutValue));
+        localStorage.setItem("checkin_date", JSON.stringify(checkinValue));
+        localStorage.setItem("checkout_date", JSON.stringify(checkoutValue));
 
-        window.location.href = "./paket.html";
+        // cek ketersediaan via AJAX (frontend)
+        const availability = await checkAvailability(checkinValue, checkoutValue);
+        if (!availability.available) {
+            // tampilkan pesan spesifik (kamu bisa custom)
+            alert("Maaf, unit tenda tidak tersedia pada tanggal yang dipilih. Silakan pilih tanggal lain atau ubah jumlah/pilihan tenda.");
+            return;
+        }
+
+        // kalau available, redirect ke paket.html (atau halaman pilihan_tenda)
+        window.location.href = "./paket.html"; // atau paket.html sesuai flowmu
     });
 </script>
+
 
 
 

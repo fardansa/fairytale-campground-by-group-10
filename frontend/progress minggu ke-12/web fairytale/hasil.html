@@ -54,45 +54,47 @@
         </div>
     </div>
 
-    <script type="module">
-        import { saveSelectedTents } from "./order_summary_flow.js";
+<script type="module">
+    import { saveSelectedTents, getDates } from "./order_summary_flow.js";
 
-        const raw = JSON.parse(localStorage.getItem("tendaDipilih")) || {
-            single: [],
-            double: [],
-            family: []
-        };
+    const raw = JSON.parse(localStorage.getItem("tendaDipilih")) || { single: [], double: [], family: [] };
 
-        function renderList(id, items) {
-            const ul = document.getElementById(id);
-            ul.innerHTML = "";
-            if (items.length === 0) {
-                ul.innerHTML = "<li class='text-muted'>-</li>";
-            }
-            items.forEach(item => {
-                const li = document.createElement("li");
-                li.textContent = item;
-                ul.appendChild(li);
-            });
+    function renderList(id, items) {
+        const ul = document.getElementById(id);
+        ul.innerHTML = "";
+        if (items.length === 0) {
+            ul.innerHTML = "<li class='text-muted'>-</li>";
         }
+        items.forEach(item => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            ul.appendChild(li);
+        });
+    }
 
-        renderList("hasilSingle", raw.single);
-        renderList("hasilDouble", raw.double);
-        renderList("hasilFamily", raw.family);
+    renderList("hasilSingle", raw.single);
+    renderList("hasilDouble", raw.double);
+    renderList("hasilFamily", raw.family);
 
-        //Pake AI hehe ga paham js :(((( maafkan si dontol ini
-        // KONVERSI DATA UNTUK ORDER SUMMARY
-        // Mengubah ["Single Tent - 01"] menjadi ["Single Tent"] agar sesuai priceTable
-        const combined = [
-            ...raw.single.map(() => "Single Tent"),
-            ...raw.double.map(() => "Double Tent"),
-            ...raw.family.map(() => "Family Tent"),
-        ];
+    // Konversi data tenda agar sesuai priceTable
+    const combined = [
+        ...raw.single.map(() => "Single Tent"),
+        ...raw.double.map(() => "Double Tent"),
+        ...raw.family.map(() => "Family Tent"),
+    ];
 
-        // Simpan ke localStorage agar order_summary.html bisa baca
-        saveSelectedTents(combined);
-        console.log("Data tenda disimpan:", combined);
-    </script>
+    // Simpan ke localStorage agar order_summary.html bisa baca
+    saveSelectedTents(combined);
+    console.log("Data tenda disimpan:", combined);
+
+    // ===== tampilkan tanggal pada halaman hasil =====
+    const dates = getDates();
+    const el = document.createElement("div");
+    el.className = "mb-3 text-center";
+    el.innerHTML = `<strong>Check-in:</strong> ${dates.checkIn || 'Belum dipilih'} &nbsp; | &nbsp; <strong>Check-out:</strong> ${dates.checkOut || 'Belum dipilih'}`;
+    const container = document.querySelector(".card .card-body");
+    if (container) container.prepend(el);
+</script>
 
 </body>
 
