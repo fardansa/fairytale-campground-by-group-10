@@ -26,6 +26,10 @@ Route::get('/contact_us', function () {
     return view('contact_us');
 }); 
 
+Route::get('/payment', function () {
+    return view('payment');
+}); 
+
 //Route::get('/booking', function () {
   //  return view('pickdate');
 //});

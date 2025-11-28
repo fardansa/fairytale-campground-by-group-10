@@ -27,16 +27,24 @@
 </div>
 
 <script type="module">
-    import { saveSelectedTents, getDates } from "/js/order_summary_flow.js";
+    import { saveSelectedTents, getDates } from "/order_summary_flow.js";
 
-    const raw = JSON.parse(localStorage.getItem("tendaDipilih")) || { single: [], double: [], family: [] };
+    let raw = JSON.parse(localStorage.getItem("tendaDipilih") || '{"single":[],"double":[],"family":[]}');
+
+    raw.single = Array.isArray(raw.single) ? raw.single : [];
+    raw.double = Array.isArray(raw.double) ? raw.double : [];
+    raw.family = Array.isArray(raw.family) ? raw.family : [];
+
 
     function renderList(id, items) {
         const ul = document.getElementById(id);
         ul.innerHTML = "";
-        if (items.length === 0) {
+
+        if (!items || items.length === 0) {
             ul.innerHTML = "<li class='text-muted'>-</li>";
+            return;
         }
+
         items.forEach(item => {
             const li = document.createElement("li");
             li.textContent = item;
@@ -48,11 +56,12 @@
     renderList("hasilDouble", raw.double);
     renderList("hasilFamily", raw.family);
 
+
     // Konversi data
     const combined = [
-        ...raw.single.map(() => "Single Tent"),
-        ...raw.double.map(() => "Double Tent"),
-        ...raw.family.map(() => "Family Tent"),
+        ...raw.single,
+        ...raw.double,
+        ...raw.family
     ];
 
     saveSelectedTents(combined);
