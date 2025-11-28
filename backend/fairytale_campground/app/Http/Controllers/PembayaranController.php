@@ -10,6 +10,29 @@ use Illuminate\Support\Facades\DB;
 
 class PembayaranController extends Controller
 {
+    public function index(Request $request)
+    {
+        $user = $request->user();
+
+        // admin menampilkan semua pembayaran
+        if ($user->role === 'admin') {
+            $payments = Pembayaran::with('pemesanan')->orderBy('created_at', 'desc')->get();
+            return response()->json($payments);
+        }
+
+        // user biasa hanya menampilkan pembayaran miliknya
+        $payments = Pembayaran::with('pemesanan')
+            ->whereHas('pemesanan', function ($q) use ($user) {
+                $q->where('user_id', $user->user_id);
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json($payments);
+    }
+
+
+
     // user submit payment (bukti optional if WA used)
     public function store(Request $request)
     {
@@ -58,6 +81,13 @@ class PembayaranController extends Controller
     public function show($id)
     {
         $payment = Pembayaran::with('pemesanan')->find($id);
+        if (!$payment) return response()->json(['message' => 'Pembayaran tidak ditemukan'], 404);
+        return response()->json($payment);
+    }
+    // show all payment status
+    public function show_all()
+    {
+        $payment = Pembayaran::with('pemesanan');
         if (!$payment) return response()->json(['message' => 'Pembayaran tidak ditemukan'], 404);
         return response()->json($payment);
     }

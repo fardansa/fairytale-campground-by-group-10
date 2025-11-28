@@ -25,6 +25,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::post('/pembayaran', [PembayaranController::class, 'store']);
+    Route::get('/pembayaran/', [PembayaranController::class, 'index']);
     Route::get('/pembayaran/{id}', [PembayaranController::class, 'show']);
 
     Route::post('/pemesanan', [PemesananController::class, 'store']);

@@ -2,7 +2,7 @@
 
 @section('title')
 
-@section('admin_css')
+@section('custom_css')
     <style>
         body {
             padding-top: 64px;
@@ -108,8 +108,11 @@
 @endsection
 
 @section('content')
+    <div class="container-fluid">
+        <div class="row">
+
             <!-- SIDEBAR -->
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-body-tertiary sidebar collapse border-end">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-body-tertiary sidebar border-end">
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item"><a id="navDashboard"
@@ -642,7 +645,4 @@
         // minimal: prevent throwing on missing elements when used elsewhere
         (function () { 'use strict'; })();
     </script>
-</body>
-
-</html>
 @endsection

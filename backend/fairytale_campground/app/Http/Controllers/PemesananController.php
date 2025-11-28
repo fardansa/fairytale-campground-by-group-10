@@ -159,6 +159,11 @@ class PemesananController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+        if($user->role == 'admin') {
+            $bookings = PemesananMaster::with('detail.tent.paket')->orderBy('created_at', 'desc')->get();
+            return response()->json($bookings);
+        }
+
         $bookings = PemesananMaster::with('detail.tent.paket')->where('user_id', $user->user_id)->orderBy('created_at', 'desc')->get();
         return response()->json($bookings);
     }
