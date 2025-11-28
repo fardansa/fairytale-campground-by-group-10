@@ -26,9 +26,9 @@ Route::get('/contact_us', function () {
     return view('contact_us');
 }); 
 
-Route::get('/booking', function () {
-    return view('pickdate');
-});
+//Route::get('/booking', function () {
+  //  return view('pickdate');
+//});
 
 Route::get('/package', function (){
     return view('paket');
@@ -49,4 +49,16 @@ Route::get('/package', function (){
 
 Route::get('/api/test', function () {
     return "API via WEB OK";
+});
+
+Route::get('pilih_tenda', function () {
+    return view('pilih_tenda');
+});
+
+Route::get('pickdate', function () {
+    return view('pickdate');
+});
+
+Route::get('home', function () {
+    return view('home');
 });

@@ -92,13 +92,13 @@
         <div class="navbar-container">
 
               <!-- Logo -->
-            <a href="./index.html" class="navbar-logo">Fairytale Campground</a>
+            <a href="/home" class="navbar-logo">Fairytale Campground</a>
 
             <!-- Menu Navigasi -->
             <nav>
                <ul class="navbar-menu">
-                  <li><a href="/index">Home</a></li>
-                  <li><a href="/booking">Booking</a></li>
+                  <li><a href="/home">Home</a></li>
+                  <li><a href="/pickdate">Booking</a></li>
                   <li><a href="/contact_us">Contact Us</a></li>
                 </ul>
             </nav>

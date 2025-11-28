@@ -63,7 +63,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <a href="/pilihan_tenda" class="btn btn-success">Book</a>
+                    <a href="/pilih_tenda" class="btn btn-success">Book</a>
                 </div>
             </div>
         </div>
@@ -81,7 +81,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <a href="/pilihan_tenda" class="btn btn-success">Book</a>
+                    <a href="/pilih_tenda" class="btn btn-success">Book</a>
                 </div>
             </div>
         </div>
@@ -99,7 +99,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <a href="/pilihan_tenda" class="btn btn-success">Book</a>
+                    <a href="/pilih_tenda" class="btn btn-success">Book</a>
                 </div>
             </div>
         </div>
