@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -103,5 +104,21 @@ class AuthController extends Controller
         $user->update($data);
 
         return response()->json(['message' => 'Profil diperbarui', 'user' => $user]);
+    }
+
+    public function loginWeb(Request $request)
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|string'
+    ]);
+
+    $user = Auth::user();
+
+    if ($user->role === 'admin') {
+        return redirect('/admin_dashboard');
+    }
+
+    return redirect('/home');
     }
 }

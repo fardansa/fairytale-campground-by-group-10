@@ -62,3 +62,15 @@ Route::get('pickdate', function () {
 Route::get('home', function () {
     return view('home');
 });
+
+Route::get('hasil', function () {
+    return view('hasil');
+});
+
+Route::get('order_summary', function () {
+    return view('order_summary');
+});
+
+Route::get('admin_dashboard', function () {
+    return view('admin_dashboard');
+});

@@ -24,25 +24,36 @@
 
     
     <script>
-        document.getElementById("loginForm").addEventListener("submit", async (e) => {
-        e.preventDefault();
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-        const res = await fetch("/api/login", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                email: document.querySelector("#inputEmail").value,
-                password: document.querySelector("#inputPassword").value
-            })
-        });
-
-        const data = await res.json();
-
-        if (data.message === "Login berhasil") {
-            window.location.href = "/login_success";
-        } else {
-            alert("Login gagal!");
-        }
+    const res = await fetch("/api/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            email: document.querySelector("#inputEmail").value,
+            password: document.querySelector("#inputPassword").value
+        })
     });
-    </script>
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        alert(data.message || "Login gagal!");
+        return;
+    }
+
+    // Simpan token dan role user
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("role", data.user.role);
+
+    // Arahkan berdasarkan role
+    if (data.user.role === "admin") {
+        window.location.href = "/admin_dashboard";
+    } else {
+        window.location.href = "/home";
+    }
+});
+</script>
+
 @endsection
