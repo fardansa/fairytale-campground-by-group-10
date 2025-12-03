@@ -17,12 +17,14 @@ class DetailPemesanan extends Model
         'subtotal'
     ];
 
+    // Relasi ke PemesananMaster
     public function pemesanan()
     {
         return $this->belongsTo(PemesananMaster::class, 'pemesanan_id');
     }
 
-    public function camp()
+    // Relasi ke Tent
+    public function tent()
     {
         return $this->belongsTo(Tent::class, 'tent_id');
     }

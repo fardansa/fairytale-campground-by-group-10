@@ -4,7 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\Register;
 use App\Http\Controllers\Auth\Login;
 use App\Http\Controllers\Auth\Logout;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PaketController;
+use App\Http\Controllers\Admin\TentController;
+use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\BookingAdminController;
  
 // Testing new registration routes
 Route::view('/test-register', 'auth.register')
@@ -98,4 +103,25 @@ Route::get('admin_dashboard', [AdminController::class, 'index'])
 
 Route::get('/api/test', function () {
 return "API via WEB OK";
+});
+
+// ROUTE KHUSUS ADMIN
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+
+    // Dashboard Admin
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
+
+    Route::resource('/paket', PaketController::class)->except(['show']);
+
+    Route::resource('tent', TentController::class)->except(['show']);
+
+    Route::prefix('booking')->name('bookings.')->group(function () {
+        Route::get('/', [BookingAdminController::class, 'index'])->name('index');
+        Route::get('/{id}', [BookingAdminController::class, 'show'])->name('show');
+        Route::post('/{id}/verify', [BookingAdminController::class, 'verify'])->name('verify');
+        Route::post('/{id}/reject', [BookingAdminController::class, 'reject'])->name('reject');
+    });
+
+    
 });
