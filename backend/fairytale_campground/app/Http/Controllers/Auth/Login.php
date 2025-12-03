@@ -18,11 +18,16 @@ class Login extends Controller
 
         // Attempt to log in
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            // Regenerate session for security
             $request->session()->regenerate();
+            $user = Auth::user(); // get current logged-in user
 
-            // Redirect to intended page or home
-            return redirect()->intended('/')->with('success', 'Welcome back!');
+            //Check role
+            if ($user->role === 'admin') {
+                return redirect('/admin_dashboard')->with('success', 'Welcome Admin!');
+            }
+
+            // default redirect for regular users
+            return redirect('/')->with('success', 'Welcome back!');
         }
 
         // If login fails, redirect back with error
