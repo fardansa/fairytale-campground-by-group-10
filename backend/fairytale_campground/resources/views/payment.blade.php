@@ -233,6 +233,7 @@
     });
     
     const token = document.querySelector("meta[name='api-token']").content;
+
     const pemesananId = new URLSearchParams(window.location.search).get("pemesanan_id");
     // submit bukti, update status menjadi Paid
     submitProofBtn.addEventListener('click', async () => {

@@ -1,5 +1,9 @@
 @extends('index')
 
+@section('title')
+    Register - FairyTale Campground
+@endsection
+
 @section('content')
       <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
         <form class="row g-3 shadow p-4 rounded bg-white" style="width: 600px;" id="registerForm">
@@ -46,7 +50,7 @@
         });
 
         let data;
-        try {
+        try {z
             data = await res.clone().json();
         } catch (e) {
             // fallback: bukan JSON, kemungkinan HTML error

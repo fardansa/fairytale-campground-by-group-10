@@ -1,6 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\Register;
+ 
+// Testing new registration routes
+Route::view('/test-register', 'auth.register')
+    ->middleware('guest')
+    ->name('test-register');
+ 
+Route::post('/test-register', Register::class)
+    ->middleware('guest');
+
 
 Route::get('/', function () {
     return view('home');
