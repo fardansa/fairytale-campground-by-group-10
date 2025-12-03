@@ -104,16 +104,17 @@
             </nav>
 
               <!-- Button Auth -->
-            <div class="navbar-end gap-2">
+            <div class="navbar-end gap-2 navbar-auth">
+                <div class="navbar-auth">
                 @auth
-                    <span class="text-sm">{{ auth()->user()->name }}</span>
-                    <form method="POST" action="/logout" class="inline">
+                    <span class="btn-solid">{{ auth()->user()->nama }}</span>
+                    <form method="POST" action="/test-logout" class="inline">
                         @csrf
-                        <button type="submit" class="btn btn-ghost btn-sm">Logout</button>
+                        <button type="submit" class="btn-solid">Logout</button>
                     </form>
                 @else
-                    <a href="/login" class="btn btn-ghost btn-sm">Sign In</a>
-                    <a href="{{ route('test-register') }}" class="btn btn-primary btn-sm">Sign Up</a>
+                    <a href="/test-login" class="btn-solid">Sign In</a>
+                    <a href="{{ route('test-register') }}" class="btn-outline">Sign Up</a>
                 @endauth
             </div>
 

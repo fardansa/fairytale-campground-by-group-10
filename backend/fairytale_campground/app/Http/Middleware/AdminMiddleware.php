@@ -12,9 +12,7 @@ class AdminMiddleware
         $user = $request->user();
 
         if (!$user || ($user->role ?? null) !== 'admin') {
-            return response()->json([
-                'message' => 'Akses dilarang: Admin only'
-            ], 403);
+            abort(403, 'Akses dilarang');
         }
 
         return $next($request);

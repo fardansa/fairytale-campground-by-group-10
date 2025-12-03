@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+    public function index(){
+        return view('admin_dashboard');
+    }
+
     // list all bookings (admin)
     public function bookings()
     {

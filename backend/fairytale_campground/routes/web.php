@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\Register;
+use App\Http\Controllers\Auth\Login;
+use App\Http\Controllers\Auth\Logout;
+use App\Http\Controllers\AdminController;
  
 // Testing new registration routes
 Route::view('/test-register', 'auth.register')
@@ -10,6 +13,20 @@ Route::view('/test-register', 'auth.register')
  
 Route::post('/test-register', Register::class)
     ->middleware('guest');
+
+// Testing new Login routes
+Route::view('/test-login', 'auth.login')
+    ->middleware('guest')
+    ->name('test-login');
+ 
+Route::post('/test-login', Login::class)
+    ->middleware('guest');
+ 
+// Testing Logout route
+Route::post('/test-logout', Logout::class)
+    ->middleware('auth')
+    ->name('test-logout');
+
 
 
 Route::get('/', function () {
@@ -36,55 +53,49 @@ Route::get('/contact_us', function () {
     return view('contact_us');
 }); 
 
-Route::get('/payment', function () {
-    return view('payment');
-}); 
-
-//Route::get('/booking', function () {
-  //  return view('pickdate');
-//});
-
-Route::get('/package', function (){
-    return view('paket');
-});
-
-
-    // Route::get('/booking/single', function () {
-//     return view('popup1');
-// });
-
-// Route::get('/booking/double', function () {
-//     return view('popup2');
-// });
-
-// Route::get('/booking/family', function () {
-//     return view('popup3');
-// });
-
-Route::get('/api/test', function () {
-    return "API via WEB OK";
-});
-
-Route::get('pilih_tenda', function () {
-    return view('pilih_tenda');
-});
-
-Route::get('pickdate', function () {
-    return view('pickdate');
-});
-
 Route::get('home', function () {
     return view('home');
 });
 
-Route::get('hasil', function () {
-    return view('hasil');
+Route::middleware('auth')->group(function () {
+    
+    Route::get('/payment', function () {
+        return view('payment');
+        }); 
+        
+        Route::get('/package', function (){
+            return view('paket');
+        });
+    
+    
+    
+        Route::get('pilih_tenda', function () {
+            return view('pilih_tenda');
+        });
+    
+        Route::get('pickdate', function () {
+            return view('pickdate');
+        });
+    
+    
+        Route::get('hasil', function () {
+            return view('hasil');
+        });
+    
+        Route::get('order_summary', function () {
+            return view('order_summary');
+        });
+    //Route::get('/booking', function () {
+    // //  return view('pickdate');
+    // //});
+
+
 });
 
-Route::get('order_summary', function () {
-    return view('order_summary');
-});
+Route::get('admin_dashboard', [AdminController::class, 'index']) 
+    ->  middleware('admin')
+    -> name('admin_dashboard');
 
-Route::get('admin_dashboard', function () {
-    return view('admin_dashboard');
+Route::get('/api/test', function () {
+return "API via WEB OK";
 });
