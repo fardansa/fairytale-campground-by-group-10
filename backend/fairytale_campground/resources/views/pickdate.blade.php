@@ -80,7 +80,6 @@
 
         /* INNER CONTAINER */
         .navbar-container {
-        max-width: 1280px;
         margin: auto;
         padding: 0 24px;
 
