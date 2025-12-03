@@ -24,6 +24,6 @@ class DetailPemesanan extends Model
 
     public function camp()
     {
-        return $this->belongsTo(Camp::class, 'tent_id');
+        return $this->belongsTo(Tent::class, 'tent_id');
     }
 }

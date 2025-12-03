@@ -20,6 +20,6 @@ class Paket extends Model
 
     public function camp()
     {
-        return $this->hasMany(Camp::class, 'paket_id');
+        return $this->hasMany(Tent::class, 'paket_id');
     }
 }
