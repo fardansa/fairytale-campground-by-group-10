@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\Register;
 use App\Http\Controllers\Auth\Login;
 use App\Http\Controllers\Auth\Logout;
@@ -22,7 +23,7 @@ Route::post('/test-register', Register::class)
 // Testing new Login routes
 Route::view('/test-login', 'auth.login')
     ->middleware('guest')
-    ->name('login');
+    ->name('test-login');
  
 Route::post('/test-login', Login::class)
     ->middleware('guest');
@@ -62,48 +63,27 @@ Route::get('home', function () {
     return view('home');
 });
 
+Route::get('pickdate', function () {
+    return view('pickdate');
+}); // bisa diakses publik
+
+Route::get('/api/check-login', function(){
+    return response()->json(['logged_in' => Auth::check()]);
+})->name('api.check-login');
+
 Route::middleware('auth')->group(function () {
+    Route::get('/paket', [App\Http\Controllers\PaketController::class, 'packagePage'])->name('package.index');
     
-    Route::get('/payment', function () {
-        return view('payment');
-        }); 
-        
-        Route::get('/package', function (){
-            return view('paket');
-        });
-    
-    
-    
-        Route::get('pilih_tenda', function () {
-            return view('pilih_tenda');
-        });
-    
-        Route::get('pickdate', function () {
-            return view('pickdate');
-        });
-    
-    
-        Route::get('hasil', function () {
-            return view('hasil');
-        });
-    
-        Route::get('order_summary', function () {
-            return view('order_summary');
-        });
-    //Route::get('/booking', function () {
-    // //  return view('pickdate');
-    // //});
+    Route::get('pilih_tenda', function () { 
+        return view('pilih_tenda'); 
+    })->name('pilih_tenda');
 
-
+    Route::get('hasil', function () { return view('hasil'); });
+    Route::get('order_summary', function () { return view('order_summary'); });
+    Route::get('payment', function () { return view('payment'); });
 });
 
-Route::get('admin_dashboard', [AdminController::class, 'index']) 
-    ->  middleware('admin')
-    -> name('admin_dashboard');
 
-Route::get('/api/test', function () {
-return "API via WEB OK";
-});
 
 // ROUTE KHUSUS ADMIN
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
