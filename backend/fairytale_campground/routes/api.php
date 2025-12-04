@@ -39,7 +39,7 @@ Route::get('/paket/{id}', [PaketController::class, 'show']);
 
 Route::get('/tent', [TentController::class, 'index']);
 Route::get('/tent/{id}', [TentController::class, 'show']);
-Route::get('/tent/available', [TentController::class, 'checkAvailability']);
+Route::post('/tent/available', [TentController::class, 'checkAvailability']);
 
 // ADMIN ONLY
 Route::middleware(['auth:sanctum','admin'])->group(function() {

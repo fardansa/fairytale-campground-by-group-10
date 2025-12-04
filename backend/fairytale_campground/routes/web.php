@@ -22,7 +22,7 @@ Route::post('/test-register', Register::class)
 // Testing new Login routes
 Route::view('/test-login', 'auth.login')
     ->middleware('guest')
-    ->name('test-login');
+    ->name('login');
  
 Route::post('/test-login', Login::class)
     ->middleware('guest');

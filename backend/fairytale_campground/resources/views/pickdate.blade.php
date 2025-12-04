@@ -159,15 +159,15 @@
                 Pilih Tanggal Camping
             </h1>
 
-            <form id="dateForm" class="space-y-5">
-
+            <form id="dateForm" method="GET" action="/api/tent/available" class="space-y-5">
+                @csrf
                 <div>
                     <label class="text-sm font-semibold text-[white]">Tanggal Check-In</label>
                     <input type="text"
                            id="checkin"
                            class="w-full mt-1 p-3 rounded-lg border border-[#1d4807] focus:ring-2 focus:ring-[#225909]"
                            placeholder="Pilih tanggal"
-                           required>
+                           required name="tanggal_checkin">
                 </div>
 
                 <div>
@@ -176,7 +176,7 @@
                            id="checkout"
                            class="w-full mt-1 p-3 rounded-lg border border-[#1d4807] focus:ring-2 focus:ring-[#225909]"
                            placeholder="Pilih tanggal"
-                           required>
+                           required name="tanggal_checkout">
                 </div>
 
                 <button type="submit"
@@ -200,7 +200,7 @@
     </div>
 
     <script>
-        // --- helper for availability check ---
+        // <!--- helper for availability check --->
         async function fetchAvailabilityFromBackend(checkIn, checkOut) {
             // contoh fetch ke endpoint nyata:
             // return fetch(`/api/availability?checkIn=${checkIn}&checkOut=${checkOut}`)
@@ -301,13 +301,13 @@
             localStorage.setItem("checkin_date", JSON.stringify(checkinValue));
             localStorage.setItem("checkout_date", JSON.stringify(checkoutValue));
 
-            // cek ketersediaan via AJAX (frontend)
-            const availability = await checkAvailability(checkinValue, checkoutValue);
-            if (!availability.available) {
-                // tampilkan pesan spesifik (kamu bisa custom)
-                alert("Maaf, unit tenda tidak tersedia pada tanggal yang dipilih. Silakan pilih tanggal lain atau ubah jumlah/pilihan tenda.");
-                return;
-            }
+            // // cek ketersediaan via AJAX (frontend)
+            // const availability = await checkAvailability(checkinValue, checkoutValue);
+            // if (!availability.available) {
+            //     // tampilkan pesan spesifik (kamu bisa custom)
+            //     alert("Maaf, unit tenda tidak tersedia pada tanggal yang dipilih. Silakan pilih tanggal lain atau ubah jumlah/pilihan tenda.");
+            //     return;
+            // }
 
             // kalau available, redirect ke paket.html (atau halaman pilihan_tenda)
             window.location.href = "/package"; // atau paket.html sesuai flowmu
