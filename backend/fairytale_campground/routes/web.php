@@ -8,93 +8,69 @@ use App\Http\Controllers\Auth\Logout;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PaketController;
 use App\Http\Controllers\Admin\TentController;
-use App\Http\Controllers\Admin\BookingController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\BookingAdminController;
- 
-// Testing new registration routes
-Route::view('/test-register', 'auth.register')
-    ->middleware('guest')
-    ->name('test-register');
- 
-Route::post('/test-register', Register::class)
-    ->middleware('guest');
-
-// Testing new Login routes
-Route::view('/test-login', 'auth.login')
-    ->middleware('guest')
-    ->name('test-login');
- 
-Route::post('/test-login', Login::class)
-    ->middleware('guest');
- 
-// Testing Logout route
-Route::post('/test-logout', Logout::class)
-    ->middleware('auth')
-    ->name('test-logout');
+use App\Http\Controllers\BookingUserController;
 
 
-
+// ===========================
+// PUBLIC ROUTES
+// ===========================
 Route::get('/', function () {
     return view('home');
-});
-
-Route::get('/login', function () {
-    return view('login');
-});
-
-Route::get('/login_success', function () {
-    return view('login_success');
-});
-
-Route::get('/register', function () {
-    return view('register');
-});
-
-Route::get('/register_success', function () {
-    return view('register_success');
-});
+})->name('home');
 
 Route::get('/contact_us', function () {
     return view('contact_us');
-}); 
+})->name('contact');
 
-Route::get('home', function () {
-    return view('home');
-});
 
-Route::get('pickdate', function () {
-    return view('pickdate');
-}); // bisa diakses publik
+// Auth routes testing (biarkan dulu)
+Route::view('/test-login', 'auth.login')->middleware('guest')->name('test-login');
+Route::post('/test-login', Login::class)->middleware('guest');
+Route::view('/test-register', 'auth.register')->middleware('guest')->name('test-register');
+Route::post('/test-register', Register::class)->middleware('guest');
+Route::post('/test-logout', Logout::class)->middleware('auth')->name('test-logout');
 
-Route::get('/api/check-login', function(){
+
+// AJAX check login
+Route::get('/api/check-login', function () {
     return response()->json(['logged_in' => Auth::check()]);
 })->name('api.check-login');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/paket', [App\Http\Controllers\PaketController::class, 'packagePage'])->name('package.index');
-    
-    Route::get('pilih_tenda', function () { 
-        return view('pilih_tenda'); 
-    })->name('pilih_tenda');
 
-    Route::get('hasil', function () { return view('hasil'); });
-    Route::get('order_summary', function () { return view('order_summary'); });
-    Route::get('payment', function () { return view('payment'); });
+// ===========================
+// USER ROUTES — BOOKING PROSES
+// ===========================
+Route::middleware('auth')->prefix('booking')->name('booking.')->group(function () {
+    Route::get('/date', [BookingUserController::class, 'DatePage'])->name('date');
+    Route::post('/date', [BookingUserController::class, 'storeDate'])->name('date.store');
+
+    Route::get('/paket', [BookingUserController::class, 'paketPage'])->name('paket');
+    Route::post('/paket', [BookingUserController::class, 'storePaket'])->name('paket.store');
+
+    Route::get('/tent', [BookingUserController::class, 'tentPage'])->name('tent');
+    Route::post('/select-tent', [BookingUserController::class, 'selectTent'])->name('selectTent'); // perbaikan
+
+    Route::get('/summary', [BookingUserController::class, 'summaryPage'])->name('summary');
+    Route::post('/summary', [BookingUserController::class, 'storeBooking'])->name('summary.store');
+
+    Route::get('/payment', [BookingUserController::class, 'paymentPage'])->name('payment');
+    Route::post('/payment/upload', [BookingUserController::class, 'uploadPayment'])->name('payment.upload');
+
 });
+Route::get('/complete', [BookingUserController::class, 'completePage'])->name('complete');
 
 
 
-// ROUTE KHUSUS ADMIN
+// ===========================
+// ADMIN ROUTES
+// ===========================
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 
-    // Dashboard Admin
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('/paket', PaketController::class)->except(['show']);
-
-    Route::resource('tent', TentController::class)->except(['show']);
+    Route::resource('/tent', TentController::class)->except(['show']);
 
     Route::prefix('booking')->name('bookings.')->group(function () {
         Route::get('/', [BookingAdminController::class, 'index'])->name('index');
@@ -103,5 +79,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::post('/{id}/reject', [BookingAdminController::class, 'reject'])->name('reject');
     });
 
-    
 });

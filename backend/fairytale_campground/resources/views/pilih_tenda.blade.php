@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <a href="javascript:history.back()" class="btn-back"><- Kembali</a>
+    <a href="javascript:history.back()" class="btn-back">← Kembali</a>
 
     <div class="d-flex justify-content-center align-items-center flex-column" style="min-height: 80vh;">
 

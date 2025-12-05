@@ -12,7 +12,7 @@
     <p class="hero-subtitle">
       Rasakan pengalaman camping yang hangat dan tak terlupakan.
     </p>
-    <a href="/pickdate">
+    <a href="/booking/date">
       <button class="btn-hero">Booking Now</button>
     </a>
   </div>

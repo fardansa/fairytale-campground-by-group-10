@@ -17,15 +17,21 @@ class DetailPemesanan extends Model
         'subtotal'
     ];
 
-    // Relasi ke PemesananMaster
+    /**
+     * Relasi ke PemesananMaster
+     * Satu DetailPemesanan milik satu PemesananMaster
+     */
     public function pemesanan()
     {
-        return $this->belongsTo(PemesananMaster::class, 'pemesanan_id');
+        return $this->belongsTo(PemesananMaster::class, 'pemesanan_id', 'pemesanan_id');
     }
 
-    // Relasi ke Tent
+    /**
+     * Relasi ke Tent
+     * Satu DetailPemesanan memiliki satu Tent
+     */
     public function tent()
     {
-        return $this->belongsTo(Tent::class, 'tent_id');
+        return $this->belongsTo(Tent::class, 'tent_id', 'tent_id');
     }
 }

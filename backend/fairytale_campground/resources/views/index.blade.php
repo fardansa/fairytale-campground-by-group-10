@@ -98,7 +98,8 @@
             <nav>
                <ul class="navbar-menu">
                   <li><a href="/home">Home</a></li>
-                  <li><a href="/pickdate">Booking</a></li>
+                  <li><a href="/booking/date">Booking</a></li>
+                  <li><a href="/complete">pesanan saya</a></li>
                   <li><a href="/contact_us">Contact Us</a></li>
                 </ul>
             </nav>

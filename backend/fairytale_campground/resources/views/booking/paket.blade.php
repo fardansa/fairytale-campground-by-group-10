@@ -105,7 +105,6 @@
                             </ul>
                         </div>
 
-    
                         <div class="modal-footer border-0">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
@@ -120,7 +119,7 @@
 </div>
 
 <div class="text-end mr-5">
-    <a href="{{ route('pilih_tenda') }}" class="btn btn-success px-4 py-2">
+    <a href="{{ route('booking.tent') }}" class="btn btn-success px-4 py-2">
         Pilih Tenda →
     </a>
 </div>

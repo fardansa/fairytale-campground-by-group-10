@@ -2,117 +2,58 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tent;
-use App\Models\DetailPemesanan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\Tent;
+use App\Models\Paket;
+use App\Models\DetailPemesanan;
 
 class TentController extends Controller
 {
-    // list all camps (optionally filter by paket_id)
+    // Halaman list tenda berdasarkan paket
     public function index(Request $request)
     {
-        $q = Tent::query();
+        $paketList = Paket::all();
 
-        if ($request->has('paket_id')) {
-            $q->where('paket_id', $request->paket_id);
+        $selectedPaketId = $request->query('paket_id') ?? $paketList->first()->paket_id;
+
+        // Ambil semua tenda sesuai paket
+        $tendaList = Tent::where('paket_id', $selectedPaketId)->get();
+
+        // Jika user mengirim tanggal checkin/checkout, cek ketersediaan
+        $checkin = $request->query('checkin');
+        $checkout = $request->query('checkout');
+
+        if ($checkin && $checkout) {
+            foreach ($tendaList as $tenda) {
+                $tenda->available = $tenda->isAvailable($checkin, $checkout);
+            }
+        } else {
+            foreach ($tendaList as $tenda) {
+                $tenda->available = ($tenda->status === 'tersedia');
+            }
         }
 
-        return response()->json($q->get());
+        return view('tent.index', compact('paketList', 'tendaList', 'selectedPaketId', 'checkin', 'checkout'));
     }
 
+    // Detail tenda
     public function show($id)
     {
-        $tent = Tent::with('paket')->find($id);
-        if (!$tent) return response()->json(['message' => 'Tent tidak ditemukan'], 404);
-        return response()->json($tent);
+        $tenda = Tent::with('paket')->findOrFail($id);
+        return view('tent.show', compact('tenda'));
     }
 
-    // check availability for a date range and paket
-    public function checkAvailability(Request $request)
+    // Update status tenda (misal admin menonaktifkan tenda)
+    public function updateStatus(Request $request, $id)
     {
-        $data = $request->validate([
-            'tanggal_checkin' => 'required|date',
-            'tanggal_checkout' => 'required|date|after:tanggal_checkin',
-            'paket_id' => 'nullable|integer'
+        $request->validate([
+            'status' => 'required|in:tersedia,tidak tersedia'
         ]);
 
-        // get camp ids that are already booked for the range (exclude expired/cancel statuses)
-        $bookedTentIds = DetailPemesanan::whereHas('pemesanan', function($q) use ($data) {
-            $q->where('tanggal_checkin', '<', $data['tanggal_checkout'])
-              ->where('tanggal_checkout', '>', $data['tanggal_checkin'])
-              ->whereNotIn('status_pemesanan', ['expired', 'dibatalkan']);
-        })->pluck('tent_id')->toArray();
+        $tenda = Tent::findOrFail($id);
+        $tenda->status = $request->status;
+        $tenda->save();
 
-        $q = Tent::query();
-        if (!empty($data['paket_id'])) {
-            $q->where('paket_id', $data['paket_id']);
-        }
-        $available = $q->whereNotIn('tent_id', $bookedTentIds)->get();
-
-        return response()->json([
-            'checkin' => $data['tanggal_checkin'],
-            'checkout' => $data['tanggal_checkout'],
-            'available_count' => $available->count(),
-            'data' => $available
-        ]);
-    }
-
-    // admin create
-    public function store(Request $request)
-    {
-        $this->authorize('admin-action');
-
-        $data = $request->validate([
-            'paket_id' => 'required|exists:paket,paket_id',
-            'nomor_tent' => 'required|string|max:10',
-            'nomor_loker' => 'nullable|string|max:10',
-            'status' => 'nullable|in:tersedia,tidak tersedia'
-        ]);
-
-        $tent = Tent::create($data);
-
-        return response()->json(['message' => 'Tent dibuat', 'tent' => $tent], 201);
-    }
-
-    // admin update
-    public function update(Request $request, $id)
-    {
-        $this->authorize('admin-action');
-
-        $tent = Tent::find($id);
-        if (!$tent) return response()->json(['message' => 'Tent tidak ditemukan'], 404);
-
-        $data = $request->validate([
-            'paket_id' => 'nullable|exists:paket,paket_id',
-            'nomor_tent' => 'nullable|string|max:10',
-            'nomor_loker' => 'nullable|string|max:10',
-            'status' => 'nullable|in:tersedia,tidak tersedia'
-        ]);
-
-        $tent->update($data);
-        return response()->json(['message' => 'Tent diperbarui', 'camp' => $tent]);
-    }
-
-    // admin delete
-    public function destroy($id)
-    {
-        $this->authorize('admin-action');
-
-        $tent = Tent::find($id);
-        if (!$tent) return response()->json(['message' => 'Tent tidak ditemukan'], 404);
-
-        // Optional: Prevent delete if there are future bookings
-        $hasFuture = $tent->detailPemesanan()->whereHas('pemesanan', function($q) {
-            $q->where('tanggal_checkout', '>=', now()->toDateString())
-              ->whereNotIn('status_pemesanan', ['expired', 'dibatalkan']);
-        })->exists();
-
-        if ($hasFuture) {
-            return response()->json(['message' => 'Tidak bisa menghapus tent yang memiliki booking aktif/future'], 400);
-        }
-
-        $tent->delete();
-        return response()->json(['message' => 'Tent dihapus']);
+        return redirect()->back()->with('success', 'Status tenda berhasil diperbarui');
     }
 }

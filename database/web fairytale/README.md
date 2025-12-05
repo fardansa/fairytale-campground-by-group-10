@@ -1,2 +1,0 @@
-# fairytale-mentah
-versi mentah

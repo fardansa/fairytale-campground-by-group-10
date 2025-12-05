@@ -20,21 +20,12 @@ class PemesananMaster extends Model
         'expired_at'
     ];
 
-    // Relasi ke user
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    // Relasi ke detail pemesanan (hasMany)
-    public function details()
+    /**
+     * Relasi ke DetailPemesanan
+     * Satu PemesananMaster bisa punya banyak DetailPemesanan
+     */
+    public function detailTenda()
     {
         return $this->hasMany(DetailPemesanan::class, 'pemesanan_id', 'pemesanan_id');
-    }
-
-    // Relasi ke pembayaran
-    public function pembayaran()
-    {
-        return $this->hasOne(Pembayaran::class, 'pemesanan_id', 'pemesanan_id');
     }
 }
