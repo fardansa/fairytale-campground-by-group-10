@@ -24,13 +24,13 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::put('/profile', [AuthController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::post('/pembayaran', [PembayaranController::class, 'store']);
+    // Route::post('/pembayaran', [PembayaranController::class, 'store'])->middleware('auth');
     Route::get('/pembayaran/', [PembayaranController::class, 'index']);
     Route::get('/pembayaran/{id}', [PembayaranController::class, 'show']);
 
-    Route::post('/pemesanan', [PemesananController::class, 'store']);
-    Route::get('/pemesanan', [PemesananController::class, 'index']);
-    Route::get('/pemesanan/{id}', [PemesananController::class, 'show']);
+    // Route::post('/pemesanan', [PemesananController::class, 'store']);
+    // Route::get('/pemesanan', [PemesananController::class, 'index']);
+    // Route::get('/pemesanan/{id}', [PemesananController::class, 'show']);
 });
 
 // PUBLIC

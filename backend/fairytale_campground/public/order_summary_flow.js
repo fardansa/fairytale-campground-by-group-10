@@ -5,8 +5,16 @@
 
 function getLocal(key) {
     const data = localStorage.getItem(key);
-    return data ? JSON.parse(data) : null;
+    if (!data) return null;
+
+    try {
+        return JSON.parse(data);
+    } catch {
+        return data;
+    }
 }
+
+
 function setLocal(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
 }
@@ -23,18 +31,15 @@ export function saveDates(checkIn, checkOut) {
 
 // getDates membaca dari beberapa kemungkinan key (prioritas: new keys)
 export function getDates() {
-    const checkIn = (localStorage.getItem("checkIn") && JSON.parse(localStorage.getItem("checkIn"))) ||
-        (localStorage.getItem("checkin_date") && JSON.parse(localStorage.getItem("checkin_date"))) ||
-        null;
-    const checkOut = (localStorage.getItem("checkOut") && JSON.parse(localStorage.getItem("checkOut"))) ||
-        (localStorage.getItem("checkout_date") && JSON.parse(localStorage.getItem("checkout_date"))) ||
-        null;
-    // Note: if stored as plain strings (not JSON), handle that:
+    let checkIn = getLocal("checkIn") || getLocal("checkin_date");
+    let checkOut = getLocal("checkOut") || getLocal("checkout_date");
+
     return {
-        checkIn: typeof checkIn === "string" ? checkIn : (checkIn ? String(checkIn) : null),
-        checkOut: typeof checkOut === "string" ? checkOut : (checkOut ? String(checkOut) : null),
+        checkIn: checkIn ? String(checkIn) : null,
+        checkOut: checkOut ? String(checkOut) : null,
     };
 }
+
 
 // --- SELECTED TENTS ---
 export function saveSelectedTents(tentArray) {
@@ -43,8 +48,10 @@ export function saveSelectedTents(tentArray) {
     setLocal("tendaDipilih", tentArray);
 }
 export function getSelectedTents() {
-    return getLocal("selectedTents") || getLocal("tendaDipilih") || [];
+    const data = getLocal("selectedTents") || getLocal("tendaDipilih") || [];
+    return Array.isArray(data) ? data : [];
 }
+
 
 // --- PRICE TABLE ---
 const priceTable = {
@@ -73,7 +80,8 @@ export function generateOrderSummary() {
     let grandTotal = 0;
 
     tents.forEach((t, idx) => {
-        const unitPrice = priceTable[t] || 0;
+        const tentType = t.split(" - ")[0];
+        const unitPrice = priceTable[tentType] || 0 ;
         const usedNights = nights === 0 ? 1 : nights;
         const subtotal = unitPrice * usedNights;
         grandTotal += subtotal;

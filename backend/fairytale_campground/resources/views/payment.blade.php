@@ -5,8 +5,6 @@
 @endsection
 
 @section('custom_css')
-    <meta name="api-token" content="{{ auth()->user()->api_token ?? '' }}">
-
     <style>
         body {
             background: #ffffff;
@@ -131,14 +129,13 @@
 
     <script type="module">
         import { generateOrderSummary } from "/order_summary_flow.js";
-
         
         const summary = generateOrderSummary();
         
         const orderSummaryBlock = document.getElementById("orderSummaryBlock");
         
         const currentBooking = {
-            id: 'local-' + Math.random().toString(36).slice(2, 9),
+            id: localStorage.getItem('pemesanan_id'),
             items: summary.items || [],
             checkIn: summary.checkIn,
             checkOut: summary.checkOut,
@@ -232,7 +229,7 @@
         reader.readAsDataURL(f);
     });
     
-    const token = document.querySelector("meta[name='api-token']").content;
+    // const token = document.querySelector("meta[name='api-token']").content;
 
     const pemesananId = new URLSearchParams(window.location.search).get("pemesanan_id");
     // submit bukti, update status menjadi Paid
@@ -251,13 +248,13 @@
             formData.append("total_pembayaran", currentBooking.total);
             formData.append("metode_pembayaran", currentBooking.paymentMethod === "bank" ? "transfer_bank" : "qris");
             formData.append("bukti", fileInput.files[0]);
-        
+            
             try {
-                const res = await fetch("/api/pembayaran", {
+                const res = await fetch("/pembayaran", {
                     method: "POST",
                     headers: {
                         "Accept": "application/json",
-                        "Authorization": "Bearer {{ auth()->user()->api_token ?? '' }}"
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
                     },
                     body: formData
                 });

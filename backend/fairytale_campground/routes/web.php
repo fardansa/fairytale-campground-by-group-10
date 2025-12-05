@@ -11,7 +11,9 @@ use App\Http\Controllers\Admin\TentController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\BookingAdminController;
- 
+use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\PemesananController;
+
 // Testing new registration routes
 Route::view('/test-register', 'auth.register')
     ->middleware('guest')
@@ -77,6 +79,12 @@ Route::middleware('auth')->group(function () {
     Route::get('pilih_tenda', function () { 
         return view('pilih_tenda'); 
     })->name('pilih_tenda');
+
+    Route::post('/pembayaran', [PembayaranController::class, 'store']);
+
+    Route::post('/pemesanan', [PemesananController::class, 'store']);
+    Route::get('/pemesanan', [PemesananController::class, 'index']);
+    Route::get('/pemesanan/{id}', [PemesananController::class, 'show']);
 
     Route::get('hasil', function () { return view('hasil'); });
     Route::get('order_summary', function () { return view('order_summary'); });

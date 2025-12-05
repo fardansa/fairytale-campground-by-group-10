@@ -8,13 +8,14 @@ use App\Models\Tent;
 use App\Models\Paket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class PemesananController extends Controller
 {
     public function store(Request $request)
     {
-        $user = $request->user();
+        $user = Auth::user();
 
         $data = $request->validate([
             'tanggal_checkin' => 'required|date',

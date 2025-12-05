@@ -74,29 +74,73 @@
                     container.innerHTML = cardsHTML;
                 }
                 
-                priceContainer.innerHTML = `
-                <h5 class="fw-semibold mb-3">Ringkasan Harga</h5>
-                
-                ${summary.items.map(i => `
-                <div class="d-flex justify-content-between mb-2">
-                <span>${i.tentType} (x${i.nights} malam)</span>
-                <span>Rp ${i.subtotal.toLocaleString('id-ID')}</span>
-                </div>
-                `).join("")}
-                
-                <hr>
-                
-                <div class="d-flex justify-content-between mb-3">
-                <span class="fw-bold">Total Pembayaran</span>
-                <span class="fw-bold text-success fs-5">Rp ${summary.total.toLocaleString('id-ID')}</span>
-                </div>
-                
-                <a href="/payment?pemesanan_id=${generatedId}
-" class="btn btn-success w-100 py-2 fw-bold">
-                Bayar
-                </a>
-                `;
+                // PEMESANAN ID
+                const pemesananId = 'local-' + Math.random().toString(36).slice(2, 9); // ID sementara berbasis timestamp
                 localStorage.setItem("pemesanan_id", pemesananId);
+
+                // RENDER TOMBOL BAYAR
+                priceContainer.innerHTML = `
+                    <h5 class="fw-semibold mb-3">Ringkasan Harga</h5>
+
+                    ${summary.items.map(i => `
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>${i.tentType} (x${i.nights} malam)</span>
+                            <span>Rp ${i.subtotal.toLocaleString('id-ID')}</span>
+                        </div>
+                    `).join("")}
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="fw-bold">Total Pembayaran</span>
+                        <span class="fw-bold text-success fs-5">
+                            Rp ${summary.total.toLocaleString('id-ID')}
+                        </span>
+                    </div>
+
+                    <a href="/payment?pemesanan_id=${pemesananId}" 
+                       class="btn btn-success w-100 py-2 fw-bold">
+                        Bayar
+                    </a>
+                `;
+
+                
+                const payload = {
+                    tanggal_checkin: localStorage.getItem("checkIn"),
+                    tanggal_checkout: localStorage.getItem("checkOut"),
+                    items: JSON.parse(localStorage.getItem("bookingItems")) // ini harus sesuai struktur controller kamu
+                };
+            
+                try {
+                    const res = await fetch("/api/pemesanan", {
+                        method: "POST",
+                        headers: {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": document
+                              .querySelector('meta[name="csrf-token"]')
+                              .content
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                
+                    const json = await res.json();
+                
+                    if (!res.ok) {
+                        console.error(json);
+                        alert(json.message || "Gagal membuat pemesanan");
+                        return;
+                    }
+                
+                    const pemesananId = json.data.pemesanan_id;
+                
+                    window.location.href = "/payment?pemesanan_id=" + pemesananId;
+                
+                } catch (err) {
+                    console.error(err);
+                    alert("Terjadi kesalahan saat membuat pemesanan");
+                }
+
             </script>
 
 @endsection

@@ -14,7 +14,7 @@ class PembayaranController extends Controller
     {
         $user = $request->user();
 
-        // admin menampilkan semua pembayaran
+        // admin menampikan semua pembayaran
         if ($user->role === 'admin') {
             $payments = Pembayaran::with('pemesanan')->orderBy('created_at', 'desc')->get();
             return response()->json($payments);

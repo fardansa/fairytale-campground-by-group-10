@@ -84,12 +84,14 @@
         localStorage.removeItem(STORAGE_KEY);
 
 
-        /*ambil tanggal*/
+        /* =========================
+           1. AMBIL TANGGAL
+        ========================= */
         function readDatesFromStorage() {
             let checkInRaw = localStorage.getItem("checkIn") || localStorage.getItem("checkin_date");
             let checkOutRaw = localStorage.getItem("checkOut") || localStorage.getItem("checkout_date");
 
-            // parse JSON, kalo gada ya pakai string biasa
+            // Kalau gagal parse JSON, pakai string biasa
             let checkIn, checkOut;
 
             try {
@@ -107,7 +109,9 @@
             return { checkIn, checkOut };
         }
 
-        /*fetch booking*/
+        /* =========================
+           2. FETCH DATA DARI API
+        ========================= */
         async function loadTentsFromAPI() {
             const { checkIn, checkOut } = readDatesFromStorage();
         
@@ -136,7 +140,9 @@
             }
         }
 
-        /*update list saat select*/
+        /* =========================
+           3. ISI OPTION SELECT
+        ========================= */
         function renderSelectOptions(data) {
             const selectSingle = document.getElementById("select1");
             const selectDouble = document.getElementById("select2");
@@ -156,7 +162,7 @@
                     option.textContent += " (Tidak tersedia)";
                 }
             
-                // kategori per paket
+                // KATEGORI BERDASARKAN PAKET
                 if (tent.paket_id == 1) {
                     selectSingle.appendChild(option);
                 } else if (tent.paket_id == 2) {
@@ -167,7 +173,9 @@
             });
         }
 
-        /*add to cart*/
+        /* =========================
+           4. TAMBAH KE KERANJANG
+        ========================= */
         function addItem(selectId, listId, category) {
             const select = document.getElementById(selectId);
             const list = document.getElementById(listId);
@@ -186,6 +194,7 @@
                 stored = {};
             }
         
+            // WAJIB pastikan array ada
             if (!stored.single) stored.single = [];
             if (!stored.double) stored.double = [];
             if (!stored.family) stored.family = [];
@@ -211,7 +220,9 @@
         }
 
 
-        /* reset */
+        /* =========================
+           5. RESET PILIHAN
+        ========================= */
         function resetSelection() {
             if (confirm("Apakah Anda yakin ingin menghapus semua pilihan?")) {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify({ single: [], double: [], family: [] }));
@@ -219,6 +230,9 @@
             }
         }
 
+        /* =========================
+           6. LOAD SAAT HALAMAN BUKA
+        ========================= */
         document.addEventListener("DOMContentLoaded", loadTentsFromAPI);
     </script>
 
