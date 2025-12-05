@@ -103,43 +103,37 @@
                         Bayar
                     </a>
                 `;
-
                 
-                const payload = {
-                    tanggal_checkin: localStorage.getItem("checkIn"),
-                    tanggal_checkout: localStorage.getItem("checkOut"),
-                    items: JSON.parse(localStorage.getItem("bookingItems")) // ini harus sesuai struktur controller kamu
-                };
-            
                 try {
-                    const res = await fetch("/api/pemesanan", {
-                        method: "POST",
-                        headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": document
-                              .querySelector('meta[name="csrf-token"]')
-                              .content
-                        },
-                        body: JSON.stringify(payload)
-                    });
-                
-                    const json = await res.json();
-                
-                    if (!res.ok) {
-                        console.error(json);
-                        alert(json.message || "Gagal membuat pemesanan");
-                        return;
-                    }
-                
-                    const pemesananId = json.data.pemesanan_id;
-                
-                    window.location.href = "/payment?pemesanan_id=" + pemesananId;
-                
-                } catch (err) {
-                    console.error(err);
-                    alert("Terjadi kesalahan saat membuat pemesanan");
+                const res = await fetch("/pembayaran", {
+                    method: "POST",
+                    headers: {
+                        "Accept": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: formData
+                });
+            
+                const json = await res.json();
+            
+                if (!res.ok) {
+                    console.error(json);
+                    alert("Gagal submit pembayaran: " + json.message);
                 }
+            
+                // sukses
+                const sb = document.getElementById("statusBadge");
+                if (sb) { sb.className = "badge bg-success"; sb.textContent = "Menunggu Verifikasi Admin"; }
+            
+                alert("Pembayaran dikirim! Menunggu verifikasi admin.");
+            
+                // opsional redirect
+                window.location.href = "/payment/status?pemesanan_id=" + pemesananId;
+            
+            } catch (err) {
+                console.error(err);
+                alert("Terjadi kesalahan saat mengirim pembayaran.");
+            }
 
             </script>
 
