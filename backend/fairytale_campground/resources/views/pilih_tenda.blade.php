@@ -76,118 +76,165 @@
         </div>
     </div>
 
-    {{-- Script Availability --}}
+        {{-- Script Availability --}}
     <script>
+        const API_URL = "/api/tent/available";
+        const STORAGE_KEY = "tendaDipilih";
+
+        localStorage.removeItem(STORAGE_KEY);
+
+
+        /* =========================
+           1. AMBIL TANGGAL
+        ========================= */
         function readDatesFromStorage() {
-            const checkIn = JSON.parse(localStorage.getItem("checkIn") || localStorage.getItem("checkin_date") || "null");
-            const checkOut = JSON.parse(localStorage.getItem("checkOut") || localStorage.getItem("checkout_date") || "null");
+            let checkInRaw = localStorage.getItem("checkIn") || localStorage.getItem("checkin_date");
+            let checkOutRaw = localStorage.getItem("checkOut") || localStorage.getItem("checkout_date");
+
+            // Kalau gagal parse JSON, pakai string biasa
+            let checkIn, checkOut;
+
+            try {
+                checkIn = JSON.parse(checkInRaw);
+            } catch {
+                checkIn = checkInRaw;
+            }
+
+            try {
+                checkOut = JSON.parse(checkOutRaw);
+            } catch {
+                checkOut = checkOutRaw;
+            }
+
             return { checkIn, checkOut };
         }
 
-        async function fetchAvailabilityFromBackend(checkIn, checkOut) {
-            await new Promise(r => setTimeout(r, 200));
-            const d = new Date(checkIn);
-            const odd = !!(d.getDate() % 2);
-            return {
-                available: true,
-                details: {
-                    Single: {
-                        "Single Tent - 01": true,
-                        "Single Tent - 03": !odd,
-                        "Single Tent - 10": true
-                    },
-                    Double: {
-                        "Double Tent - 03": true,
-                        "Double Tent - 04": true,
-                        "Double Tent - 05": true
-                    },
-                    Family: {
-                        "Family Tent - 02": true,
-                        "Family Tent - 09": odd,
-                        "Family Tent - 10": true
-                    }
-                }
-            };
-        }
-
-        async function applyAvailabilityToOptions() {
+        /* =========================
+           2. FETCH DATA DARI API
+        ========================= */
+        async function loadTentsFromAPI() {
             const { checkIn, checkOut } = readDatesFromStorage();
+        
             if (!checkIn || !checkOut) {
+                alert("Silakan pilih tanggal booking terlebih dahulu!");
                 document.querySelector(".keranjang-btn").classList.add("disabled");
-                document.querySelector(".keranjang-btn").setAttribute("title", "Pilih tanggal dulu di halaman Booking");
                 return;
             }
-
-            const resp = await fetchAvailabilityFromBackend(checkIn, checkOut);
-            if (resp && resp.details) {
-                Object.keys(resp.details).forEach(cat => {
-                    const map = resp.details[cat];
-                    Object.keys(map).forEach(optVal => {
-                        const option = document.querySelector(`option[value="${optVal}"]`);
-                        if (option) {
-                            option.disabled = !map[optVal];
-                            if (!map[optVal]) option.textContent += " (Tidak tersedia)";
-                        }
-                    });
-                });
-
-                const anyEnabled = Array
-                    .from(document.querySelectorAll("select.form-select option"))
-                    .some(o => !o.disabled && o.value !== "");
-
-                const proceedBtn = document.querySelector(".keranjang-btn");
-                if (!anyEnabled) {
-                    proceedBtn.classList.add("disabled");
-                    proceedBtn.setAttribute("title", "Tidak ada tenda tersedia pada tanggal terpilih");
-                } else {
-                    proceedBtn.classList.remove("disabled");
-                    proceedBtn.removeAttribute("title");
+        
+            const url = `${API_URL}?tanggal_checkin=${checkIn}&tanggal_checkout=${checkOut}`;
+        
+            try {
+                const res = await fetch(url);
+                const json = await res.json();
+            
+                if (!json.data) {
+                    alert("Data tenda tidak ditemukan");
+                    return;
                 }
+            
+                renderSelectOptions(json.data);
+            
+            } catch (err) {
+                console.error(err);
+                alert("Gagal mengambil data tenda!");
             }
         }
 
-        window.addEventListener("DOMContentLoaded", applyAvailabilityToOptions);
+        /* =========================
+           3. ISI OPTION SELECT
+        ========================= */
+        function renderSelectOptions(data) {
+            const selectSingle = document.getElementById("select1");
+            const selectDouble = document.getElementById("select2");
+            const selectFamily = document.getElementById("select3");
+        
+            selectSingle.innerHTML = `<option disabled selected value="">Pilih Nomor Tenda</option>`;
+            selectDouble.innerHTML = `<option disabled selected value="">Pilih Nomor Tenda</option>`;
+            selectFamily.innerHTML = `<option disabled selected value="">Pilih Nomor Tenda</option>`;
+        
+            data.forEach(tent => {
+                const option = document.createElement("option");
+                option.value = tent.nomor_tent;
+                option.textContent = tent.nomor_tent;
+            
+                if (tent.status === "tidak tersedia") {
+                    option.disabled = true;
+                    option.textContent += " (Tidak tersedia)";
+                }
+            
+                // KATEGORI BERDASARKAN PAKET
+                if (tent.paket_id == 1) {
+                    selectSingle.appendChild(option);
+                } else if (tent.paket_id == 2) {
+                    selectDouble.appendChild(option);
+                } else if (tent.paket_id == 3) {
+                    selectFamily.appendChild(option);
+                }
+            });
+        }
 
+        /* =========================
+           4. TAMBAH KE KERANJANG
+        ========================= */
         function addItem(selectId, listId, category) {
             const select = document.getElementById(selectId);
             const list = document.getElementById(listId);
             const value = select.value;
 
-            if (value && value !== "" && !select.options[select.selectedIndex].disabled) {
 
-                const STORAGE_KEY = "tendaDipilih";
-                const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"single":[],"double":[],"family":[]}');
-                if (!stored[category]) {
-                    stored[category] = [];
-                }
-
-                if (stored[category].includes(value)) {
-                    alert("Tenda ini sudah Anda pilih!");
-                    return;
-                }
-
-                const li = document.createElement('li');
-                li.className = "list-group-item d-flex justify-content-between align-items-center";
-                li.innerText = value;
-                const badge = document.createElement("span");
-                badge.className = "badge bg-success rounded-pill";
-                badge.innerText = "✓";
-                li.appendChild(badge);
-                list.appendChild(li);
-
-                stored[category].push(value);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
-            } else {
-                alert("Silakan pilih nomor tenda yang tersedia terlebih dahulu.");
+            if (!value) {
+                alert("Pilih tenda terlebih dahulu!");
+                return;
             }
+        
+            let stored;
+            try {
+                stored = JSON.parse(localStorage.getItem("tendaDipilih")) || {};
+            } catch {
+                stored = {};
+            }
+        
+            // WAJIB pastikan array ada
+            if (!stored.single) stored.single = [];
+            if (!stored.double) stored.double = [];
+            if (!stored.family) stored.family = [];
+        
+            if (stored[category].includes(value)) {
+                alert("Tenda ini sudah Anda pilih!");
+                return;
+            }
+        
+            const li = document.createElement('li');
+            li.className = "list-group-item d-flex justify-content-between align-items-center";
+            li.innerText = value;
+        
+            const badge = document.createElement("span");
+            badge.className = "badge bg-success rounded-pill";
+            badge.innerText = "✓";
+        
+            li.appendChild(badge);
+            list.appendChild(li);
+        
+            stored[category].push(value);
+            localStorage.setItem("tendaDipilih", JSON.stringify(stored));
         }
 
+
+        /* =========================
+           5. RESET PILIHAN
+        ========================= */
         function resetSelection() {
             if (confirm("Apakah Anda yakin ingin menghapus semua pilihan?")) {
-                localStorage.setItem("tendaDipilih", JSON.stringify({ single: [], double: [], family: [] }));
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({ single: [], double: [], family: [] }));
                 location.reload();
             }
         }
+
+        /* =========================
+           6. LOAD SAAT HALAMAN BUKA
+        ========================= */
+        document.addEventListener("DOMContentLoaded", loadTentsFromAPI);
     </script>
+
 
 @endsection
