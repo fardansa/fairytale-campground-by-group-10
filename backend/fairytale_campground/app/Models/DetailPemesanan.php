@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Tent; // ← WAJIB!
 
 class DetailPemesanan extends Model
 {
@@ -17,21 +18,14 @@ class DetailPemesanan extends Model
         'subtotal'
     ];
 
-    /**
-     * Relasi ke PemesananMaster
-     * Satu DetailPemesanan milik satu PemesananMaster
-     */
     public function pemesanan()
     {
         return $this->belongsTo(PemesananMaster::class, 'pemesanan_id', 'pemesanan_id');
     }
 
-    /**
-     * Relasi ke Tent
-     * Satu DetailPemesanan memiliki satu Tent
-     */
-    public function tent()
+    public function tenda()
     {
-        return $this->belongsTo(Tent::class, 'tent_id', 'tent_id');
+        return $this->belongsTo(Tent::class, 'tent_id', 'tent_id')
+                    ->with('paket');
     }
 }

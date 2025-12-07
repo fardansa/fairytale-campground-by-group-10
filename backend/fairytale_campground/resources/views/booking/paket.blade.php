@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-<a href="javascript:history.back()" class="btn-back mt-20 mb-3">← Kembali</a>
+<a href="/booking/date" class="btn-back mt-20 mb-3">← Kembali</a>
 
 <div class="container py-4">
     <div class="row justify-content-center gy-5">

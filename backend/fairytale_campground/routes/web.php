@@ -23,8 +23,9 @@ Route::get('/contact_us', function () {
     return view('contact_us');
 })->name('contact');
 
-
-// Auth routes testing (biarkan dulu)
+Route::get('/login', function () {
+    return redirect()->route('test-login');
+})->name('login');
 Route::view('/test-login', 'auth.login')->middleware('guest')->name('test-login');
 Route::post('/test-login', Login::class)->middleware('guest');
 Route::view('/test-register', 'auth.register')->middleware('guest')->name('test-register');
@@ -37,13 +38,16 @@ Route::get('/api/check-login', function () {
     return response()->json(['logged_in' => Auth::check()]);
 })->name('api.check-login');
 
+// PUBLIC ROUTES — USER BOOKING DATE
+Route::prefix('booking')->name('booking.')->group(function () {
 
+    Route::get('/date', [BookingUserController::class, 'DatePage'])->name('date');
+    Route::post('/date', [BookingUserController::class, 'storeDate'])->name('date.store');
+});
 // ===========================
 // USER ROUTES — BOOKING PROSES
 // ===========================
 Route::middleware('auth')->prefix('booking')->name('booking.')->group(function () {
-    Route::get('/date', [BookingUserController::class, 'DatePage'])->name('date');
-    Route::post('/date', [BookingUserController::class, 'storeDate'])->name('date.store');
 
     Route::get('/paket', [BookingUserController::class, 'paketPage'])->name('paket');
     Route::post('/paket', [BookingUserController::class, 'storePaket'])->name('paket.store');
@@ -57,10 +61,13 @@ Route::middleware('auth')->prefix('booking')->name('booking.')->group(function (
     Route::get('/payment', [BookingUserController::class, 'paymentPage'])->name('payment');
     Route::post('/payment/upload', [BookingUserController::class, 'uploadPayment'])->name('payment.upload');
 
+    Route::get('/booking/complete', [\App\Http\Controllers\BookingUserController::class, 'completePage'])->name('complete');
+    Route::get('/booking/complete/{id?}', [BookingUserController::class, 'completePage'])->name('booking.complete');
+
 });
-Route::get('/complete', [BookingUserController::class, 'completePage'])->name('complete');
-
-
+Route::get('/booking/history', [BookingUserController::class, 'historyPage'])
+    ->middleware('auth')
+    ->name('booking.history');
 
 // ===========================
 // ADMIN ROUTES

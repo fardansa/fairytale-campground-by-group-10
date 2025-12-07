@@ -26,7 +26,7 @@ class BookingAdminController extends Controller
     // Tampilkan detail booking
     public function show($id)
     {
-        $booking = PemesananMaster::with(['details.tent', 'user', 'pembayaran'])
+        $booking = PemesananMaster::with(['detailPemesanan.tenda', 'user', 'pembayaran'])
                     ->findOrFail($id);
 
         $buktiExists = Storage::exists("payments/$id.jpg") ||
@@ -43,6 +43,9 @@ class BookingAdminController extends Controller
         $booking->status_pemesanan = 'telah_dibayar';
         $booking->save();
 
+        foreach ($booking->detailPemesanan as $detail) {
+    $detail->tenda->update(['status' => 'tidak tersedia']);
+    }
         return back()->with('success', 'Pembayaran berhasil diverifikasi!');
     }
 

@@ -29,19 +29,43 @@
         text-decoration: none; 
         display: inline-block; 
         min-width: 180px;
+        margin: 0.3rem 0;
     }
     .btn-action:hover { background-color: #225909; }
-    .status { font-weight: bold; margin-top: 1rem; font-size: 1.1rem; color: #225909; }
+    .status { 
+        font-weight: bold; 
+        margin-top: 1rem; 
+        font-size: 1.1rem; 
+        color: #225909; 
+    }
     p { margin-bottom: 0.5rem; color: #1d4807; }
 </style>
 @endsection
 
 @section('content')
+
+@if(!session()->has('last_booking_id'))
+<div class="card shadow-xl mt-24">
+    <h2 class="text-xl font-semibold text-red-600">Tidak ada data booking untuk ditampilkan.</h2>
+    <p class="mt-2 text-[#1d4807]">Silakan lakukan pemesanan terlebih dahulu.</p>
+    <a href="{{ route('booking.date') }}" class="btn-action mt-4">Mulai Booking</a>
+</div>
+@else
 <div class="card shadow-xl mt-24">
     <h1 class="text-3xl font-bold text-[#1d4807] mb-4">Booking Berhasil!</h1>
-    <p class="mb-2">Nomor Pemesanan: <strong>{{ session('last_booking_id') ?? '-' }}</strong></p>
+
+    <p class="mb-2">Nomor Pemesanan: <strong>{{ session('last_booking_id') }}</strong></p>
     <p class="mb-2">Status Pemesanan: <span class="status">Menunggu Konfirmasi</span></p>
     <p class="mb-4">Tanggal Check-In: {{ session('checkin') }} | Check-Out: {{ session('checkout') }}</p>
+
+    @php 
+        $tendaList = session('complete_tendaList', []);
+        $paketList = session('complete_paketList', []);
+        $checkin = session('checkin');
+        $checkout = session('checkout');
+        $selisih = (strtotime($checkout) - strtotime($checkin)) / 86400;
+        $grandTotal = 0;
+    @endphp
 
     <table class="summary-table w-full mb-6 border-collapse border border-gray-300">
         <thead>
@@ -53,15 +77,6 @@
             </tr>
         </thead>
         <tbody>
-            @php 
-                $tendaList = session('complete_tendaList', []);
-                $paketList = session('complete_paketList', []);
-                $checkin = session('checkin');
-                $checkout = session('checkout');
-                $selisih = (strtotime($checkout) - strtotime($checkin)) / 86400;
-                $grandTotal = 0;
-            @endphp
-
             @foreach($tendaList as $tenda)
                 @php
                     $paket = $paketList[$tenda['paket_id']];
@@ -84,8 +99,11 @@
         </tfoot>
     </table>
 
-    <p class="mb-2">Silakan tunggu konfirmasi dari admin. Setelah dikonfirmasi, Anda akan mendapatkan email atau notifikasi status pembayaran.</p>
+    <p class="mb-2">Silakan tunggu konfirmasi dari admin. Setelah dikonfirmasi, Anda akan mendapatkan notifikasi.</p>
 
-    <a href="{{ route('home') }}" class="btn-action mt-4">← Kembali ke Beranda</a>
+    <a href="{{ route('home') }}" class="btn-action">← Kembali ke Beranda</a>
+    <a href="{{ route('booking.history') }}" class="btn-action">Lihat Semua Pesanan Saya</a>
 </div>
+@endif
+
 @endsection

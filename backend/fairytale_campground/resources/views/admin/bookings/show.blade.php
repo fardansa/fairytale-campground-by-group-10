@@ -41,10 +41,10 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($booking->details as $item)
+                @forelse($booking->detailPemesanan as $item)
                 <tr>
-                    <td>{{ $item->tent->paket->nama_paket ?? '-' }}</td>
-                    <td>{{ $item->tent->nomor_tent ?? '-' }}</td>
+                    <td>{{ $item->tenda->paket->nama_paket ?? '-' }}</td>
+                    <td>{{ $item->tenda->nomor_tent ?? '-' }}</td>
                     <td>Rp {{ number_format($item->harga_per_malam,0,',','.') }}</td>
                     <td>Rp {{ number_format($item->subtotal,0,',','.') }}</td>
                 </tr>

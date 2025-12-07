@@ -70,13 +70,13 @@
         </div>
 
         {{-- Submit --}}
-        <div class="mt-6 flex justify-between items-center">
-            <a href="{{ route('booking.date') }}" class="px-6 py-2 bg-gray-300 text-gray-800 font-semibold rounded hover:bg-gray-400 shadow">
-                ← Kembali
-            </a>
-            <button type="button" id="submit-btn" class="px-6 py-2 bg-[#1d4807] text-white font-semibold rounded hover:bg-green-700 shadow">
-                Lanjut ke Ringkasan →
-            </button>
+    <div class="flex justify-end">
+        <button type="button" id="submit-btn"
+        class="px-6 py-2 bg-[#1d4807] text-white font-semibold rounded hover:bg-green-700 shadow">
+        Lanjut ke Ringkasan →
+        </button>
+    </div>
+
         </div>
     </form>
 </div>

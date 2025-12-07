@@ -193,12 +193,45 @@ class BookingUserController extends Controller
         session()->forget(['tent_id','paket_id']);
 
         // Redirect ke halaman complete
-        return redirect()->route('booking.complete');
+        return redirect()->route('booking.complete', $order->pemesanan_id);
     }
 
     // STEP 6 — Halaman selesai
-    public function completePage()
-    {
-        return view('booking.complete');
+public function completePage($id = null)
+{
+    $userId = Auth::id();
+
+    // Jika akses dari summary baru selesai booking → pakai session
+    if (!$id && session()->has('last_booking_id')) {
+        $id = session('last_booking_id');
     }
+
+    // Jika masih tidak ada id → arahkan ke history page
+    if (!$id) {
+        return redirect()->route('booking.history');
+    }
+
+    $order = PemesananMaster::with(['detailPemesanan.tenda', 'pembayaran'])
+        ->where('pemesanan_id', $id)
+        ->when($userId, fn($q) => $q->where('user_id', $userId))
+        ->firstOrFail();
+
+    return view('booking.complete', compact('order'));
+}
+
+// HISTORY PAGE
+public function historyPage()
+{
+    if (!Auth::check()) {
+        return view('booking.history')->with('message', 'Anda belum login');
+    }
+
+    $history = PemesananMaster::with(['detailPemesanan.tenda', 'pembayaran'])
+        ->where('user_id', Auth::id())
+        ->orderBy('pemesanan_id', 'DESC')
+        ->get();
+
+    return view('booking.history', compact('history'));
+}
+
 }
