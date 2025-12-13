@@ -199,25 +199,28 @@ class BookingUserController extends Controller
     // STEP 6 — Halaman selesai
 public function completePage($id = null)
 {
-    $userId = Auth::id();
-
-    // Jika akses dari summary baru selesai booking → pakai session
-    if (!$id && session()->has('last_booking_id')) {
-        $id = session('last_booking_id');
+    // WAJIB login untuk akses detail
+    if (!Auth::check()) {
+        return redirect()->route('login');
     }
 
-    // Jika masih tidak ada id → arahkan ke history page
-    if (!$id) {
+    // Jika tidak ada ID dan tidak ada session → balik ke history
+    if (!$id && !session()->has('last_booking_id')) {
         return redirect()->route('booking.history');
     }
 
+    // Ambil ID dari session jika perlu
+    $id = $id ?? session('last_booking_id');
+
+    // AMBIL DATA LANGSUNG DARI DATABASE
     $order = PemesananMaster::with(['detailPemesanan.tenda', 'pembayaran'])
         ->where('pemesanan_id', $id)
-        ->when($userId, fn($q) => $q->where('user_id', $userId))
+        ->where('user_id', Auth::id()) // FIXED, TIDAK CONDITIONAL
         ->firstOrFail();
 
     return view('booking.complete', compact('order'));
 }
+
 
 // HISTORY PAGE
 public function historyPage()

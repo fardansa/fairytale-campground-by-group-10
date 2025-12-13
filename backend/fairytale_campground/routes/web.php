@@ -61,8 +61,7 @@ Route::middleware('auth')->prefix('booking')->name('booking.')->group(function (
     Route::get('/payment', [BookingUserController::class, 'paymentPage'])->name('payment');
     Route::post('/payment/upload', [BookingUserController::class, 'uploadPayment'])->name('payment.upload');
 
-    Route::get('/booking/complete', [\App\Http\Controllers\BookingUserController::class, 'completePage'])->name('complete');
-    Route::get('/booking/complete/{id?}', [BookingUserController::class, 'completePage'])->name('booking.complete');
+    Route::get('/complete/{id?}', [BookingUserController::class, 'completePage'])->name('complete');
 
 });
 Route::get('/booking/history', [BookingUserController::class, 'historyPage'])

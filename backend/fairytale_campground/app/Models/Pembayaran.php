@@ -14,7 +14,8 @@ class Pembayaran extends Model
         'pemesanan_id',
         'total_pembayaran',
         'status_pembayaran',
-        'tanggal_pembayaran'
+        'tanggal_pembayaran',
+        'bukti_tf'
     ];
 
     public function pemesanan()

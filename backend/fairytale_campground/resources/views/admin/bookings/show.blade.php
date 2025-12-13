@@ -61,23 +61,15 @@
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-success text-white fw-bold">Bukti Pembayaran</div>
     <div class="card-body">
-        @if($booking->pembayaran)
-            <p><strong>Metode:</strong> {{ $booking->pembayaran->metode_pembayaran }}</p>
-            <p><strong>Status:</strong>
-                <span class="badge 
-                    @if($booking->pembayaran->status_pembayaran=='diterima') bg-success
-                    @elseif($booking->pembayaran->status_pembayaran=='ditolak') bg-danger
-                    @else bg-warning text-dark @endif">
-                {{ $booking->pembayaran->status_pembayaran }}</span>
-            </p>
-            @if($booking->pembayaran->bukti_transfer)
-                <img src="{{ asset('storage/' . $booking->pembayaran->bukti_transfer) }}" class="img-fluid rounded" style="max-width: 320px;">
+            @if($booking->pembayaran->bukti_tf)
+                <img 
+                    src="{{ asset('storage/' . $booking->pembayaran->bukti_tf) }}" 
+                    class="img-fluid rounded" 
+                    style="max-width: 320px;"
+                >
             @else
                 <p class="text-danger">Bukti Transfer Belum Diupload</p>
             @endif
-        @else
-            <p class="text-danger">Belum Ada Data Pembayaran</p>
-        @endif
     </div>
 </div>
 

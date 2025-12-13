@@ -70,7 +70,8 @@ CREATE TABLE `pembayaran` (
   `pemesanan_id` int(10) UNSIGNED NOT NULL,
   `total_pembayaran` int(11) NOT NULL,
   `status_pembayaran` enum('menunggu_verifikasi','diterima','ditolak') NOT NULL DEFAULT 'menunggu_verifikasi',
-  `tanggal_pembayaran` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `tanggal_pembayaran` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `bukti_tf` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
