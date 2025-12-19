@@ -218,34 +218,19 @@
           border-radius: 12px;
  }
 
-
- /* ============================
-   CONTACT SECTION
-============================ */
-/* ============================
-   BACKGROUND FULL PUTIH
-============================ */
 body {
   background: #ffffff !important;
 }
 
-
-/* ====================================
-   CONTACT SECTION (FULL PAGE CENTER)
-============================ */
 .contact-section {
   min-height: 100vh;
-  /* agar section memenuhi satu layar */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* center secara vertical */
   align-items: center;
-  /* center secara horizontal */
   text-align: center;
   padding: 40px 20px;
   background: #ffffff;
-  /* tetap putih */
 }
 
 .contact-section h1 {
@@ -261,16 +246,12 @@ body {
 }
 
 
-/* ============================
-   GRID KOTAK SOSMED
-============================ */
 .icon-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 30px;
   width: 100%;
   max-width: 650px;
-  /* supaya tetap center dan proporsional */
 }
 
 .icon-grid a {
@@ -301,12 +282,12 @@ body {
 
 .btn-back {
     display: inline-block;
-    margin-top: 110px; /* kasih jarak dari navbar */
+    margin-top: 110px;
     margin-left: 20px;
     font-size: 17px;
     font-weight: 600;
     text-decoration: none;
-    color: #0a472e; /* warna tema hijau */
+    color: #0a472e;
     background-color: #d9d9d9;
     padding: 8px 18px;
     border-radius: 8px;
@@ -319,4 +300,62 @@ body {
     color: #ffffff;
 }
 
+.footer {
+    background-color: #0f2a05;
+    color: #e6e6e6;
+}
+
+.footer-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.footer-subtitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    margin-left: 60px;
+}
+
+.footer-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #d1d1d1;
+}
+
+.footer-link li {
+    margin-bottom: 8px;
+    margin-left: 66px;
+}
+
+.footer-link a {
+    color: #d1d1d1;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.footer-link a:hover {
+    color: #9be15d;
+    padding-left: 4px;
+}
+
+.footer-social a {
+    display: inline-block;
+    margin-right: 12px;
+    font-size: 1.3rem;
+    color: #d1d1d1;
+    transition: 0.2s;
+}
+
+.footer-social a:hover {
+    color: #9be15d;
+    transform: translateY(-2px);
+}
+
+.footer-bottom {
+    background-color: #0b1f03;
+    font-size: 0.85rem;
+    color: #bfbfbf;
+}
 

@@ -142,7 +142,53 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
-    <footer>
-        <p class="mt-5 mb-3 text-body-secondary text-center">© Fairytale Campground Gacorrr</p>
-    </footer>
+    <footer class="footer">
+    <div class="container py-5">
+        <div class="row gy-4">
+
+            <div class="col-md-4">
+                <h5 class="footer-title">Fairytale Campground</h5>
+                <p class="footer-text">
+                    Fairytale Campground adalah destinasi wisata alam yang
+                    menyediakan pengalaman camping nyaman, aman, dan berkesan
+                    untuk keluarga, pasangan, maupun individu.
+                </p>
+            </div>
+
+            <div class="col-md-4">
+                <h6 class="footer-subtitle">Navigasi</h6>
+                <ul class="footer-link list-unstyled">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/booking/date">Booking</a></li>
+                    <li><a href="/booking/history">My Orders</a></li>
+                    <li><a href="/contact_us">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-4">
+                <h6 class="footer-subtitle">Kontak</h6>
+                <p class="footer-text mb-2">
+                    <i class="bi bi-geo-alt-fill me-2"></i>
+                    Bogor, Jawa Barat
+                </p>
+                <p class="footer-text mb-3">
+                    <i class="bi bi-envelope-fill me-2"></i>
+                    info@fairytalecampground.com
+                </p>
+
+                <div class="footer-social">
+                    <a href="#"><i class="bi bi-instagram"></i></a>
+                    <a href="#"><i class="bi bi-facebook"></i></a>
+                    <a href="#"><i class="bi bi-twitter-x"></i></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="footer-bottom text-center py-3">
+        © {{ date('Y') }} Fairytale Campground. All rights reserved.
+    </div>
+</footer>
+
 </body>

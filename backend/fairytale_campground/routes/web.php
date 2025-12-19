@@ -12,9 +12,7 @@ use App\Http\Controllers\Admin\BookingAdminController;
 use App\Http\Controllers\BookingUserController;
 
 
-// ===========================
 // PUBLIC ROUTES
-// ===========================
 Route::get('/', function () {
     return view('home');
 })->name('home');
@@ -33,20 +31,19 @@ Route::post('/test-register', Register::class)->middleware('guest');
 Route::post('/test-logout', Logout::class)->middleware('auth')->name('test-logout');
 
 
-// AJAX check login
+//check login
 Route::get('/api/check-login', function () {
     return response()->json(['logged_in' => Auth::check()]);
 })->name('api.check-login');
 
-// PUBLIC ROUTES — USER BOOKING DATE
+//USER BOOKING DATE
 Route::prefix('booking')->name('booking.')->group(function () {
 
     Route::get('/date', [BookingUserController::class, 'DatePage'])->name('date');
     Route::post('/date', [BookingUserController::class, 'storeDate'])->name('date.store');
 });
-// ===========================
+
 // USER ROUTES — BOOKING PROSES
-// ===========================
 Route::middleware('auth')->prefix('booking')->name('booking.')->group(function () {
 
     Route::get('/paket', [BookingUserController::class, 'paketPage'])->name('paket');
@@ -62,15 +59,15 @@ Route::middleware('auth')->prefix('booking')->name('booking.')->group(function (
     Route::post('/payment/upload', [BookingUserController::class, 'uploadPayment'])->name('payment.upload');
 
     Route::get('/complete/{id?}', [BookingUserController::class, 'completePage'])->name('complete');
-
 });
+
+// USER ROUTES — BOOKING HISTORY
 Route::get('/booking/history', [BookingUserController::class, 'historyPage'])
     ->middleware('auth')
     ->name('booking.history');
 
-// ===========================
+
 // ADMIN ROUTES
-// ===========================
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
