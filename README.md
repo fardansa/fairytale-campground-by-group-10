@@ -1,7 +1,33 @@
 # fairytale-campground-by-group-10
 
-### OUR KEKURANGAN WEB KITA (lebih ke front end sy)
+# Cara Menjalankan Aplikasi
+**A. Menyiapkan Database**
+```
+mysql -u root -p
+CREATE DATABASE fairytale_db;
+EXIT
+mysql -u root -p fairytale_db < database/fairytale_campground.sql
+```
 
+**B. Menjalankan Backend**
+```
+cd backend/fairytale_campground
+cp .env.example .env
+composer install
+php artisan key:generate
+php artisan serve
+```
+
+**C. Menjalankan Frontend**
+```
+cd frontend/frontend\ newest/progress/web\ fairytale
+python3 -m http.server 8080
+```
+>buka browser di http://localhost:8080.
+
+
+
+### OUR KEKURANGAN WEB KITA
 ### A. Visual & Layout (Tampilan)
 1.  **Hero Image Tersembunyi:** Gambar pemandangan di halaman utama ("Home") berada terlalu jauh di bawah (*below the fold*), sehingga user harus *scroll* dulu untuk melihatnya.
 2.  **White Space Berlebih:** Terlalu banyak ruang kosong antara *Navbar* dan judul utama di halaman Home, membuat halaman terlihat "belum selesai" atau *broken*.
