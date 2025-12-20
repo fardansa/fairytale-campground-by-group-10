@@ -17,7 +17,7 @@ class Register extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:128',
-            'email'=> 'required|string|email|max:255|unique:user',
+            'email'=> 'required|string|email|max:255|unique:user,email',
             'password'=> 'required|string|min:8|confirmed',
         ]);
 
@@ -27,7 +27,6 @@ class Register extends Controller
             'password'=> Hash::make($validated['password']),
         ]);
     
-        Auth::login($user);
 
         return redirect('/register_success') ->with('success', 'Registrasi berhasil');
     }

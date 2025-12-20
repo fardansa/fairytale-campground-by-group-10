@@ -28,6 +28,9 @@ Route::view('/test-login', 'auth.login')->middleware('guest')->name('test-login'
 Route::post('/test-login', Login::class)->middleware('guest');
 Route::view('/test-register', 'auth.register')->middleware('guest')->name('test-register');
 Route::post('/test-register', Register::class)->middleware('guest');
+Route::get('/register_success', function () {
+    return view('register_success');
+});
 Route::post('/test-logout', Logout::class)->middleware('auth')->name('test-logout');
 
 

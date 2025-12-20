@@ -5,5 +5,5 @@
 
 
 @section('button')
-    Booking Disini
+    Silahkan login
 @endsection
